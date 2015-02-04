@@ -1,0 +1,15 @@
+{
+    "app_name": "hn.components.editor",
+    "dev_server": {
+        "host": "0.0.0.0",
+        "port": 8001,
+        "backend": "https://lb.hn"
+    },
+    "bower_exclude": [
+        "/chai/",
+        "/angular-mocks/"
+    ],
+    "main_module_name": "editor",
+    "api_version": "1.0",
+    "web_root": "/"
+}

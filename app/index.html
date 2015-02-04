@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html class="ge-project-manager" ng-app="hn.components.editor">
+<head>
+    <meta charset="UTF-8">
+    <title>HourlyNerd Editor Component</title>
+
+    <!-- build:css(./app) css/vendor.css -->
+    <!-- bower:css -->
+    <!-- endbower -->
+    <!-- endbuild -->
+
+    <!-- build:css css/hn-components-editor.css -->
+    <!-- inject:css -->
+    <!-- endinject -->
+    <!-- endbuild -->
+
+    <base href="/">
+
+</head>
+<body ng-init="value='<b>HourlyNerd</b> The future of consulting.'">
+    <base href="/">
+    <form class="form" autocomplete="off">
+    <div class="container">
+        <h1>HourlyNerd Editor</h1>
+        <p class="lead">
+            An angularjs wrapper directive for the excellent <a href="https://github.com/neilj/Squire">squire editor</a>.
+        </p>
+        <hr/>
+        <div class="row">
+            <div class="col-sm-4">
+                <p>
+                    Here is the default editor. It supports adding and removing links, and shows you which styles are under cursor.
+                </p>
+                <hr/>
+                <p>
+                    <textarea ng-bind="demo1" style="width: 100%;"></textarea>
+                </p>
+            </div>
+            <div class="col-sm-8">
+                <hn-editor editor-class="foo" height="150px"
+                    ng-model="demo1" name="body" body="value"
+                    placeholder="Type in here!">
+                </hn-editor>
+            </div>
+        </div>
+        <hr/>
+        <div class="row">
+            <div class="col-sm-4">
+                <p>
+                    Here is an editor with a cover. The cover has placeholder on it, and when you click it, it reveals the editor and an optional button container.
+                </p>
+            </div>
+            <div class="col-sm-8">
+                <hn-editor height="150px" ng-model="bar" name="body" placeholder="why do you like cats?" required>
+                    <hn-editor-cover>
+                        <div style="border: 1px solid #dde6e8; color: #bbb; padding: 10px; cursor: pointer;">Click if you like cats</div>
+                    </hn-editor-cover>
+                    <hn-editor-controls>
+                        <div class="form-group">
+                            <button class="btn btn-primary pull-right" type="button">Meow</button>
+                        </div>
+                    </hn-editor-controls>
+                </hn-editor>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <h3>Usage</h3>
+                <p>
+                    View the source :) Will update this at some point soon.
+                </p>
+            </div>
+        </div>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <hr/>
+        <p class="lead">
+            &copy; 2015 <a href='https://hourlynerd.com/careers'>HourlyNerd Inc.</a>
+        </p>
+    </div>
+    </form>
+
+    <!-- config.json -->
+    <!-- endconfig -->
+
+    <!-- build:js(./app) scripts/vendor.js -->
+    <!-- bower:js -->
+    <!-- endbower -->
+    <!-- endbuild -->
+
+    <!-- build:js scripts/hn-components-editor.js -->
+    <!-- inject:js -->
+    <!-- endinject -->
+    <!-- endbuild -->
+
+</body>
+</html>
