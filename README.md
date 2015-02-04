@@ -5,6 +5,7 @@ Check out the DEMO
 
 
 # depends on
+
 ```js
     "angular": "~1.3.8",
     "angular-strap": "~2.1.6",
@@ -12,4 +13,14 @@ Check out the DEMO
     "jquery": ">= 1.9.0",
     "font-awesome": "~4.3.0",
     "squire-rte": "~1.0.1"
+```
+
+# building
+
+```bash
+npm install bower -g
+npm install gulp -g
+npm install
+bower install
+gulp build
 ```
