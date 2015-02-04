@@ -1,5 +1,5 @@
 # angular-squire
-angularjs directive for squire rich text editor. 
+angularjs directive for the [squire rich text editor](https://github.com/neilj/Squire). 
 
 Check out the [DEMO](http://hourlynerd.github.io/angular-squire/)
 
