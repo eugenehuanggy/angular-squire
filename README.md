@@ -1,4 +1,4 @@
-# hn-squire
+# angular-squire
 angularjs directive for squire rich text editor. 
 
 Check out the [DEMO](http://hourlynerd.github.io/angular-squire/)
