@@ -1,1 +1,4 @@
 .idea/
+.compiled/
+node_modules/
+app/
