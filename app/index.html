@@ -1,15 +1,15 @@
 <!DOCTYPE html>
-<html class="ge-project-manager" ng-app="hn.components.editor">
+<html class="ge-project-manager" ng-app="angular-squire">
 <head>
     <meta charset="UTF-8">
-    <title>HourlyNerd Editor Component</title>
+    <title>Angular-Squire</title>
 
     <!-- build:css(./app) css/vendor.css -->
     <!-- bower:css -->
     <!-- endbower -->
     <!-- endbuild -->
 
-    <!-- build:css css/hn-components-editor.css -->
+    <!-- build:css css/angular-squire.css -->
     <!-- inject:css -->
     <!-- endinject -->
     <!-- endbuild -->
@@ -21,9 +21,9 @@
     <base href="/">
     <form class="form" autocomplete="off">
     <div class="container">
-        <h1>HourlyNerd Editor <iframe style="border:none" class="pull-right" src="http://ghbtns.com/github-btn.html?user=hourlynerd&amp;repo=hn-squire&amp;type=watch&amp;count=true" width="80" height="20" title="Star on GitHub"></iframe></h1>
+        <h1>Angular-Squire <iframe style="border:none" class="pull-right" src="http://ghbtns.com/github-btn.html?user=hourlynerd&amp;repo=angular-squire&amp;type=watch&amp;count=true" width="80" height="20" title="Star on GitHub"></iframe></h1>
         <p class="lead">
-            An angularjs wrapper directive for the excellent <a href="https://github.com/neilj/Squire">squire editor</a>.
+            An angularjs wrapper directive for the excellent <a href="https://github.com/neilj/Squire">squire editor</a> by <a href="https://hourlynerd.com/">HourlyNerd Inc</a>.
         </p>
         <hr/>
         <div class="row">
@@ -37,30 +37,30 @@
                 </p>
             </div>
             <div class="col-sm-8">
-                <hn-editor editor-class="foo" height="150px"
+                <squire editor-class="foo" height="150px"
                     ng-model="demo1" name="body" body="value"
                     placeholder="Type in here!">
-                </hn-editor>
+                </squire>
             </div>
         </div>
         <hr/>
         <div class="row">
             <div class="col-sm-4">
                 <p>
-                    Here is an editor with a cover. The cover has placeholder on it, and when you click it, it reveals the editor and an optional button container.
+                    Here is an editor with a cover. The cover has placeholder on it, and when you click it, it reveals the editor and an optional controls container.
                 </p>
             </div>
             <div class="col-sm-8">
-                <hn-editor height="150px" ng-model="bar" name="body" placeholder="why do you like cats?" required>
-                    <hn-editor-cover>
+                <squire height="150px" ng-model="bar" name="body" placeholder="why do you like cats?" required>
+                    <squire-cover>
                         <div style="border: 1px solid #dde6e8; color: #bbb; padding: 10px; cursor: pointer;">Click if you like cats</div>
-                    </hn-editor-cover>
-                    <hn-editor-controls>
+                    </squire-cover>
+                    <squire-controls>
                         <div class="form-group">
                             <button class="btn btn-primary pull-right" type="button">Meow</button>
                         </div>
-                    </hn-editor-controls>
-                </hn-editor>
+                    </squire-controls>
+                </squire>
             </div>
         </div>
         <div class="row">
@@ -90,7 +90,7 @@
     <!-- endbower -->
     <!-- endbuild -->
 
-    <!-- build:js scripts/hn-components-editor.js -->
+    <!-- build:js scripts/angular-squire.js -->
     <!-- inject:js -->
     <!-- endinject -->
     <!-- endbuild -->

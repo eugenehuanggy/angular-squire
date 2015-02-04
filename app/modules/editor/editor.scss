@@ -1,5 +1,5 @@
-$hn-editor-container-bg: #dde6e8 !default;
-$hn-editor-wrapper-border: #dde6e8 !default;
+$angular-squire-container-bg: #dde6e8 !default;
+$angular-squire-wrapper-border: #dde6e8 !default;
 
 @-webkit-keyframes fadeIn {
   0% {
@@ -19,7 +19,7 @@ $hn-editor-wrapper-border: #dde6e8 !default;
   }
 }
 
-.hn-editor {
+.angular-squire {
     -webkit-transition: transition(all 2s);
     -moz-transition: transition(all 2s);
     -o-transition: transition(all 2s);
@@ -39,7 +39,7 @@ $hn-editor-wrapper-border: #dde6e8 !default;
         animation-name: fadeIn;
 
         height: 100%;
-        background-color: $hn-editor-container-bg;
+        background-color: $angular-squire-container-bg;
         .ng-hide {
             height: 0;
         }
@@ -49,7 +49,7 @@ $hn-editor-wrapper-border: #dde6e8 !default;
             overflow: hidden;
         }
     }
-    .hn-editor-controls, .hn-editor-cover {
+    .angular-squire-controls, .angular-squire-cover {
         display: block;
     }
     .menu .item {
@@ -156,7 +156,7 @@ $hn-editor-wrapper-border: #dde6e8 !default;
     }
     .wrapper {
         position: relative;
-        border: 1px solid $hn-editor-wrapper-border;
+        border: 1px solid $angular-squire-wrapper-border;
 
         .placeholder {
             position: absolute;
@@ -186,11 +186,11 @@ $hn-editor-wrapper-border: #dde6e8 !default;
     }
 }
 
-.hn-editor.focus .wrapper .placeholder div {
+.angular-squire.focus .wrapper .placeholder div {
     display: none;
 }
 
-html.hn-editor-iframe {
+html.angular-squire-iframe {
     height: 100%;
     body {
         -moz-box-sizing: border-box;

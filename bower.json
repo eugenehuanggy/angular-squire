@@ -1,15 +1,15 @@
 {
     "name": "hn-squire",
     "version": "0.1.0",
-    "homepage": "https://github.com/HourlyNerd/hn-squire",
+    "homepage": "https://github.com/HourlyNerd/angular-squire",
     "authors": [
-        "hourlynerd inc"
+        "HourlyNerd Inc"
     ],
     "main": [
-        "/dist/css/hn-components-editor.css",
-        "/dist/scripts/hn-components-editor.js"
+        "/dist/css/angular-squire.css",
+        "/dist/scripts/angular-squire.js"
     ],
-    "description": "angularjs directive for squire wysiwyg editor",
+    "description": "angularjs directive for squire rich text editor",
     "license": "MIT",
     "ignore": [
         ".tmp/",

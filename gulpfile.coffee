@@ -33,14 +33,8 @@ karma = require('karma').server
 protractor = require("gulp-protractor").protractor
 sprite = require('css-sprite').stream
 
-error_handle = (cb) ->
-    handler = (err) ->
-        console.error(err)
-        cb.apply and cb()
-    if cb.apply
-        return handler
-    else
-        handler(cb)
+error_handle = (err) ->
+    console.error(err)
 
 COMPILE_PATH = "./.compiled"            # Compiled JS and CSS, Images, served by webserver
 TEMP_PATH = "./.tmp"                    # hourlynerd dependencies copied over, uncompiled
@@ -85,7 +79,7 @@ gulp.task('watch', ->
     watch(paths.sass, ->
         runSequence('sass', 'inject', 'bower')
     )
-    watch(paths.coffee, (event) ->
+    watch(paths.coffee, ->
         runSequence('coffee', 'inject', 'bower')
     )
     watch(BOWER_PATH, ->
@@ -98,7 +92,7 @@ gulp.task('watch', ->
         runSequence('inject', 'bower')
     )
     watch(paths.hn_assets, ->
-        runSequence('clean:tmp', 'clean:compiled', 'make_config', 'inject', 'inject:version', 'copy_deps', ['coffee', 'sass'])
+        runSequence('clean:tmp', 'clean:compiled', 'inject', 'inject:version', 'copy_deps', ['coffee', 'sass'])
     )
 )
 
@@ -163,8 +157,6 @@ gulp.task('inject:version', ->
 )
 
 gulp.task "webserver", ->
-    process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0" #hackaroo courtesy of https://github.com/request/request/issues/418
-    protocol = if ~config.dev_server.backend.indexOf("https:") then "https:" else "http:"
     return gulp.src([
             COMPILE_PATH
             TEMP_PATH
@@ -177,18 +169,6 @@ gulp.task "webserver", ->
             directoryListing:
                 enabled: true
                 path: COMPILE_PATH
-            proxies: [
-                {
-                    source: "/api/v#{config.api_version}/",
-                    target: "#{config.dev_server.backend}/api/v#{config.api_version}/"
-                    options: {protocol}
-                },
-                {
-                    source: "/photo/",
-                    target: "#{config.dev_server.backend}/photo/"
-                    options: {protocol}
-                }
-            ],
             middleware: [
                 (req, res, next) ->
                     req.url = '/' if req.url  == ''
@@ -235,9 +215,10 @@ gulp.task "coffee", ->
         .pipe(coffeelint())
         .pipe(coffeelint.reporter())
         .pipe(ngClassify(ngClassifyOptions))
-        .on("error", error_handle( ->
+        .on("error", (err) ->
+            console.log(err)
             this.emit('end')
-        ))
+        )
         .pipe(sourcemaps.init())
         .pipe(coffee())
         .pipe(sourcemaps.write())
@@ -359,25 +340,6 @@ gulp.task('sprite', ->
     .pipe(gulp.dest(TEMP_PATH))
 )
 
-gulp.task('make_config', (cb) ->
-    configs = glob.sync(BOWER_PATH+"/**/bower.json")
-    versions = {}
-    configs.forEach((cpath)->
-      c = require(cpath)
-      versions[c.name] = c.version
-    )
-    config.bower_versions = versions
-    config.build_date = new Date()
-    constant = JSON.stringify(config)
-    template = """
-        angular.module('appConfig', [])
-            .constant('APP_CONFIG', #{constant});
-    """
-    if not fs.existsSync(COMPILE_PATH)
-        fs.mkdirSync(COMPILE_PATH)
-    fs.writeFile(COMPILE_PATH + "/config.js", template, cb)
-)
-
 gulp.task "update",  ->
     getRemoteCode = (cb) ->
         console.log("Grabbing latest gulpfile from github...")
@@ -410,7 +372,6 @@ gulp.task "default", (cb) ->
     runSequence(['clean:compiled', 'clean:tmp']
                 'copy_deps'
                 'templates'
-                'make_config'
                 'sprite'
                 ['coffee', 'sass']
                 'inject',
@@ -432,7 +393,6 @@ gulp.task "build", (cb) ->
     runSequence(['clean:dist', 'clean:compiled', 'clean:tmp']
                 'copy_deps'
                 'templates'
-                'make_config'
                 'sprite'
                 ['coffee', 'sass']
                 'images'

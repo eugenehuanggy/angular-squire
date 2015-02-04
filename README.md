@@ -1,5 +1,5 @@
 # hn-squire
-angularjs directive for squire wysiwyg editor. 
+angularjs directive for squire rich text editor. 
 
 Check out the DEMO
 
