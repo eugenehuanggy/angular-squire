@@ -20,186 +20,226 @@ $angular-squire-wrapper-border: #dde6e8 !default;
 }
 
 .angular-squire {
-    -webkit-transition: transition(all 2s);
-    -moz-transition: transition(all 2s);
-    -o-transition: transition(all 2s);
-    transition: transition(all 2s);
+  -webkit-transition: transition(all 2s);
+  -moz-transition: transition(all 2s);
+  -o-transition: transition(all 2s);
+  transition: transition(all 2s);
 
-    .hl {
-        border-bottom: 2px #55ACEE solid;
-        opacity: 1;
-    }
+  .hl {
+    border-bottom: 2px #55ACEE solid;
+    opacity: 1;
+  }
 
-    .editor-container {
-        -webkit-animation-duration: 0.4s;
-        animation-duration: 0.4s;
-        -webkit-animation-fill-mode: both;
-        animation-fill-mode: both;
-        -webkit-animation-name: fadeIn;
-        animation-name: fadeIn;
+  .squire-popover {
+    position: relative;
+    background: #FAFAFA;
+    border: 2px solid #dde6e8;
+    position: absolute;
+    z-index: 110;
+    padding: 10px;
+    top: 50px;
+    display: none;
+    border-radius: 4px;
+    min-width: 250px;
 
-        height: 100%;
-        background-color: $angular-squire-container-bg;
-        .ng-hide {
-            height: 0;
-        }
-
-        &.editor-hide {
-            height: 0;
-            overflow: hidden;
-        }
-    }
-    .angular-squire-controls, .angular-squire-cover {
-        display: block;
-    }
-    .menu .item {
-        opacity: 0.5;
-        font-size:13px;
-        padding: 1px 5px;
-        color:#000;
-        float:left;
-        background:#FFF;
-        border-left:1px #EEE solid;
-        border-bottom: 2px transparent solid;
-        -webkit-font-smoothing:subpixel-antialiased
-    }
-    .menu.b .item.bold {
-        @extend .hl;
-    }
-    .menu.i .item.italic {
-        @extend .hl;
-    }
-    .menu.ul .item.ulist {
-        @extend .hl;
-    }
-    .menu.ol .item.olist {
-        @extend .hl;
-    }
-    .menu.u .item.underline {
-        @extend .hl;
-    }
-    .menu.blockquote .item.quote {
-        @extend .hl;
-    }
-    .menu.align-left .item.aleft {
-        @extend .hl;
-    }
-    .menu.align-right .item.aright {
-        @extend .hl;
-    }
-    .menu.align-center .item.acenter {
-        @extend .hl;
-    }
-    .menu.size .item.header {
-        @extend .hl;
+    .disabled {
+      opacity: 0.5;
     }
 
-
-    .menu .group {
-        display:inline-block;
-        border:1px #EEE solid;
+    &:after, &:before {
+      bottom: 100%;
+      left: 50%;
+      border: solid transparent;
+      content: " ";
+      height: 0;
+      width: 0;
+      position: absolute;
+      pointer-events: none;
     }
 
-    .menu .group .item .flip {
-        -ms-transform:rotateY(180deg);
-        -webkit-transform:rotateY(180deg);
-        -moz-transform:rotateY(180deg);
-        transform:rotateY(180deg)
+    &:after {
+      border-color: rgba(250, 250, 250, 0);
+      border-bottom-color: #FAFAFA;
+      border-width: 15px;
+      margin-left: -15px;
+    }
+    &:before {
+      border-color: rgba(221, 230, 232, 0);
+      border-bottom-color: $angular-squire-container-bg;
+      border-width: 18px;
+      margin-left: -18px;
+    }
+    input, button {
+      border-radius: 4px;
+      border: 1px solid $angular-squire-container-bg;
+      background-color: #FFF;
+      height: 30px;
+      padding: 2px;
+      display: block;
+      width: 100%;
+      margin: 5px 0;
+    }
+  }
+  .squire-popover-overlay {
+    background-color: transparent;
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    opacity: 0;
+    display: none;
+    z-index: 100;
+  }
+
+  .editor-container {
+    -webkit-animation-duration: 0.4s;
+    animation-duration: 0.4s;
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both;
+    -webkit-animation-name: fadeIn;
+    animation-name: fadeIn;
+
+    height: 100%;
+    background-color: $angular-squire-container-bg;
+    .ng-hide {
+      height: 0;
     }
 
-    .popover-content {
-        width: 260px;
-        .form-control-feedback {
-            top: 0;
-            cursor: pointer;
-        }
+    &.editor-hide {
+      height: 0;
+      overflow: hidden;
     }
-    .close-popover {
-      pointer-events: all;
-    }
+  }
+  .angular-squire-controls, .angular-squire-cover {
+    display: block;
+  }
+  .menu .item {
+    opacity: 0.5;
+    font-size:13px;
+    padding: 1px 5px;
+    color:#000;
+    float:left;
+    background:#FFF;
+    border-left:1px #EEE solid;
+    border-bottom: 2px transparent solid;
+    -webkit-font-smoothing:subpixel-antialiased
+  }
+  .menu.b .item.bold {
+    @extend .hl;
+  }
+  .menu.i .item.italic {
+    @extend .hl;
+  }
+  .menu.ul .item.ulist {
+    @extend .hl;
+  }
+  .menu.ol .item.olist {
+    @extend .hl;
+  }
+  .menu.u .item.underline {
+    @extend .hl;
+  }
+  .menu.blockquote .item.quote {
+    @extend .hl;
+  }
+  .menu.align-left .item.aleft {
+    @extend .hl;
+  }
+  .menu.align-right .item.aright {
+    @extend .hl;
+  }
+  .menu.align-center .item.acenter {
+    @extend .hl;
+  }
+  .menu.size .item.header {
+    @extend .hl;
+  }
 
-    input[type=text] {
-        background-color: #fff;
-        vertical-align: middle;
-        max-width: 100%;
-        border: 1px solid #a8afb2;
-        border-color: #a8afb2 #d4d7d9 #d4d7d9;
-        color: #516066;
-        -webkit-box-sizing: border-box;
-        box-sizing: border-box;
-        -webkit-transition: border linear 150ms;
-        -moz-transition: border linear 150ms;
-        -o-transition: border linear 150ms;
-        transition: border linear 150ms;
-        font-size: 14px;
-        padding: 5px;
-        width: 100%;
 
-    }
+  .menu .group {
+    display:inline-block;
+    border:1px #EEE solid;
+  }
 
-    .menu .group .item:hover, .menu .item:first-child:hover, .menu .item.active:first-child {
-        @extend .hl;
-    }
+  .menu .group .item .flip {
+    -ms-transform:rotateY(180deg);
+    -webkit-transform:rotateY(180deg);
+    -moz-transform:rotateY(180deg);
+    transform:rotateY(180deg)
+  }
 
-    .menu .item:first-child {
-        border-left:none;
+  .popover-content {
+    width: 260px;
+    .form-control-feedback {
+      top: 0;
+      cursor: pointer;
     }
-    .menu {
-        -webkit-touch-callout: none;
-        -webkit-user-select: none;
-        -khtml-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-        user-select: none;
-        text-align: right;
-        padding: 4px 4px 0 0;
-    }
-    .wrapper {
-        position: relative;
-        border: 1px solid $angular-squire-wrapper-border;
+  }
 
-        .placeholder {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            -moz-box-sizing: border-box;
-            -webkit-box-sizing: border-box;
-            box-sizing: border-box;
-            padding: 1em;
-            background: #fff;
-            color: #777;
-            z-index: 0;
-        }
-        iframe {
-            background: transparent;
-            z-index: 10;
-            position: relative;
-            width: 100%;
-            height: 100%;
-            color: #333;
-            background-repeat: no-repeat;
-            background-position: right center;
-            outline: none;
-        }
+  .menu .group .item:hover, .menu .item:first-child:hover, .menu .item.active:first-child {
+    @extend .hl;
+  }
+
+  .menu .item:first-child {
+    border-left:none;
+  }
+  .menu {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    text-align: right;
+    padding: 4px 4px 0 0;
+  }
+  .wrapper {
+    position: relative;
+    border: 1px solid $angular-squire-wrapper-border;
+
+    .placeholder {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      -moz-box-sizing: border-box;
+      -webkit-box-sizing: border-box;
+      box-sizing: border-box;
+      padding: 1em;
+      background: #fff;
+      color: #777;
+      z-index: 0;
     }
+    iframe {
+      background: transparent;
+      z-index: 10;
+      position: relative;
+      width: 100%;
+      height: 100%;
+      color: #333;
+      background-repeat: no-repeat;
+      background-position: right center;
+      outline: none;
+    }
+  }
 }
 
 .angular-squire.focus .wrapper .placeholder div {
-    display: none;
+  display: none;
 }
 
 html.angular-squire-iframe {
+  height: 100%;
+  body {
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
     height: 100%;
-    body {
-        -moz-box-sizing: border-box;
-        -webkit-box-sizing: border-box;
-        box-sizing: border-box;
-        height: 100%;
-        padding: 1em;
-        background: transparent;
-        color: #2b2b2b;
-        cursor: text;
-    }
+    padding: 1em;
+    background: transparent;
+    color: #2b2b2b;
+    cursor: text;
+  }
 }

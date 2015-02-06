@@ -1,0 +1,22 @@
+<div class="arrow"></div>
+<div class="title">Insert Link</div>
+<input type="text"
+    id="edit-link"
+    placeholder="Link URL"
+    ng-model="data.link"
+    ng-keydown="popoverHide($event, 'makeLink')" />
+<button
+    ng-show="canRemoveLink()"
+    ng-click="action('removeLink')">
+    Remove Link
+</button>
+<button ng-hide="canRemoveLink()"
+    ng-class="{disabled: !canAddLink()}"
+    ng-click="action('makeLink')">
+    Insert Link
+</button>
+<button ng-show="canRemoveLink()"
+    ng-class="{disabled: !canAddLink()}"
+    ng-click="action('makeLink')">
+    Update Link
+</button>
