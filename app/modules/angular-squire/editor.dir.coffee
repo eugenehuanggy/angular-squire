@@ -1,6 +1,6 @@
 angular
     .module("angular-squire", [])
-    .directive("squire", ($timeout, $templateCache, $compile) ->
+    .directive("squire", ->
         return {
             restrict: 'E'
             require: "ngModel"
@@ -12,7 +12,7 @@ angular
                 editorClass: '@editorClass',
             replace: true
             transclude: true
-            templateUrl: "/modules/editor/editor.html"
+            templateUrl: "/modules/angular-squire/editor.html"
 
             ### @ngInject ###
             controller: ($scope) ->
@@ -31,8 +31,6 @@ angular
             link: (scope, element, attrs, ngModel) ->
                 editor = scope.editor = null
 
-                popovers = []
-
                 LINK_DEFAULT = "http://"
 
                 getLinkAtCursor = ->
@@ -43,7 +41,6 @@ angular
 
                 scope.canRemoveLink = ->
                     href = getLinkAtCursor()
-                    console.log(href)
                     return href and href != LINK_DEFAULT
 
                 scope.canAddLink = ->
@@ -51,36 +48,6 @@ angular
 
                 scope.data =
                     link: LINK_DEFAULT
-
-                # TODO: Remove this heresy
-                $templateCache.get('angular-squire/popover.html') or
-                $templateCache.put('angular-squire/popover.html', """
-                    <div class='angular-squire-popover'>
-                        <strong>Insert Link</strong>
-                        <div class="form-group has-feedback">
-                            <input type="text" class="form-control"
-                                id='edit-link' placeholder="Link URL"
-                                ng-model='data.link'
-                                ng-keydown='popoverHide($event, "makeLink")'/>
-                            <label for="edit-link" title="Remove Link"
-                                ng-show="canRemoveLink()"
-                                ng-click="action('removeLink')"
-                                class="glyphicon glyphicon-remove
-                                    text-danger form-control-feedback close-popover">
-                            </label>
-                        </div>
-                        <div ng-if="!canRemoveLink()" class="btn btn-success btn-block"
-                            ng-class="{disabled: !canAddLink()}"
-                            ng-click="action('makeLink')">
-                            Insert
-                        </div>
-                        <div ng-if="canRemoveLink()"class="btn btn-success btn-block"
-                            ng-class="{disabled: !canAddLink()}"
-                            ng-click="action('makeLink')">
-                            Update
-                        </div>
-                    </div>
-                """)
 
                 scope.$on('$destroy', ->
                     editor?.destroy()
@@ -90,26 +57,39 @@ angular
                         .text().trim().length == 0  #it also gets hidden via css on focus
 
                 scope.popoverHide = (e, name) ->
-                    if e.keyCode == 13
-                        _.each(popovers, (p) -> p.hide())
+                    hide = ->
+                        angular.element(e.target).closest(".popover-visible").removeClass("popover-visible")
                         scope.action(name)
+                    if e.keyCode
+                        hide() if e.keyCode == 13
+                    else
+                        hide()
 
-                # scope.$on('tooltip.show.before',  ->
-                #     return unless editor
-                #     if />A\b/.test(editor.getPath()) or editor.hasFormat('A')
-                #         scope.data.link = getLinkAtCursor()
-                #     else
-                #         scope.data.link = LINK_DEFAULT
-                # )
-                # scope.$on('tooltip.show', (e, tooltip) ->
-                #     return unless editor
-                #     tooltip.$element.find("input").focus()
-                # )
+
+                scope.popoverShow = (e) ->
+                    linkElement = angular.element(e.currentTarget)
+
+                    if angular.element(e.target).closest(".squire-popover").length
+                        return
+                    if linkElement.hasClass("popover-visible")
+                        return
+
+                    linkElement.addClass("popover-visible")
+                    if />A\b/.test(editor.getPath()) or editor.hasFormat('A')
+                        scope.data.link = getLinkAtCursor()
+                    else
+                        scope.data.link = LINK_DEFAULT
+                    popover = element.find(".squire-popover").find("input").focus().end()
+                    popover.css(left: -1 * (popover.width() / 2) + linkElement.width() / 2  + 2)
+                    return
 
                 updateModel = (value) ->
                     scope.$evalAsync(->
                         ngModel.$setViewValue(value)
                     )
+
+                ngModel.$render = ->
+                    editor.setHTML(ngModel.$viewValue || '')
 
                 updateStylesToMatch = ->
                     doc = editor.getDocument()
@@ -126,41 +106,6 @@ angular
                     if scope.editorClass
                         doc.childNodes[0].className += scope.editorClass
 
-                bindPopovers = ->
-                    # popovers.push($popover(element.find('.add-link'), {
-                    #     contentTemplate: 'angular-squire/popover.html',
-                    #     autoClose: true,
-                    #     html: true,
-                    #     scope: scope,
-                    #     placement: "bottom"
-                    # }))
-                    html = $templateCache.get('/modules/editor/popover.html')
-                    template = $compile(html)
-                    link_elem = element.find('.add-link')
-                    link_elem
-                        .click( () ->
-                            if />A\b/.test(editor.getPath()) or editor.hasFormat('A')
-                                scope.data.link = getLinkAtCursor()
-                            else
-                                scope.data.link = LINK_DEFAULT
-
-                            popover = element
-                                .find('.squire-popover')
-                                .html(template(scope))
-                                .show()
-
-                            popover.find("input").focus()
-
-                            popover
-                                .css(left: link_elem.position().left - popover.width() / 2)
-
-                            element.find('.squire-popover-overlay').show().click( () ->
-                                popover.hide()
-                                $(this).hide()
-                            )
-                        )
-
-
 
                 iframe = element.find('iframe')
                 menubar = element.find('.menu')
@@ -169,9 +114,7 @@ angular
                     editor = scope.editor = new Squire(iframe[0].contentWindow.document)
                     editor.defaultBlockTag = 'P'
 
-
                     updateStylesToMatch()
-                    bindPopovers()
 
                     editor.addEventListener("input", ->
                         updateModel(editor.getHTML())
@@ -179,9 +122,6 @@ angular
 
                     editor.addEventListener("focus", ->
                         element.addClass('focus')
-                        _.each(popovers, (p) ->
-                            p.hide()
-                        )
                         scope.editorVisibility(true)
                     )
                     editor.addEventListener("blur", ->
@@ -253,9 +193,7 @@ angular
                     editor.decreaseQuoteLevel()  if test.testQuote
                     if test.testLink
                         editor.removeLink()
-                        element.find('.squire-popover').hide()
                         editor.focus()
-                        debugger;
                     else if test.isNotValue("removeLink") then
                         # these will trigger popover, dont do anything
                     else if action == 'makeLink'

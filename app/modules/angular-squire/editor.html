@@ -13,8 +13,34 @@
                 </div>
             </div>
             <div class="group">
-                <div title='Insert Link' class="item add-link">
+                <div title='Insert Link' class="item add-link" ng-click="popoverShow($event)">
                     <i class="fa fa-link"></i>
+                    <div class="squire-popover">
+                        <div class="arrow"></div>
+                        <div class="content">
+                            <div class="title">Insert Link</div>
+                            <input type="text"
+                                id="edit-link"
+                                placeholder="Link URL"
+                                ng-model="data.link"
+                                ng-keydown="popoverHide($event, 'makeLink')" />
+                            <button class="double r" ng-show="canRemoveLink()"
+                                ng-click="popoverHide($event, 'removeLink')">
+                                <span class="fa fa-remove"></span> Remove Link
+                            </button>
+                            <button class="double l" ng-show="canRemoveLink()"
+                                ng-class="{disabled: !canAddLink()}"
+                                ng-click="popoverHide($event, 'makeLink')">
+                                <span class="fa fa-edit"></span> Update Link
+                            </button>
+                            <button ng-hide="canRemoveLink()"
+                                ng-class="{disabled: !canAddLink()}"
+                                ng-click="popoverHide($event, 'makeLink')">
+                                <span class="fa fa-plus"></span> Insert Link
+                            </button>
+                        </div>
+                        <div class="squire-popover-overlay" ng-click="popoverHide($event, 'makeLink')"></div>
+                    </div>
                 </div>
                 <div title='Insert Numbered List' ng-click="action('makeOrderedList')" class="item olist">
                     <i class="fa fa-list-ol"></i>
@@ -51,8 +77,7 @@
                 </div>
             </div>
         </div>
-        <div class="squire-popover"></div>
-        <div class="squire-popover-overlay"></div>
+
         <div class='wrapper' ng-style='{width: width, height: height}'>
             <div class='placeholder'>
                 <div ng-show='showPlaceholder()'>{{ placeholder }}</div>
