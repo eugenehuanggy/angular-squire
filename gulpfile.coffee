@@ -50,8 +50,8 @@ paths =
         "./.tmp/modules/**/*.scss"
     ]
     templates: [
-        "./app/modules/**/views/*.html"
-        "./.tmp/modules/**/views/*.html"
+        "./app/modules/**/*.html"
+        "./.tmp/modules/**/*.html"
     ]
     coffee: [
         "./app/modules/**/*.coffee"
