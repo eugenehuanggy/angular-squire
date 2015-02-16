@@ -8,5 +8,5 @@
         "/chai/",
         "/angular-mocks/"
     ],
-    "main_module_name": "editor"
+    "main_module_name": "angular-squire"
 }
