@@ -1,8 +1,10 @@
 <!DOCTYPE html>
-<html ng-app="angular-squire">
+<html class="ge-project-manager" ng-app="angular-squire">
 <head>
     <meta charset="UTF-8">
     <title>Angular-Squire</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
 
     <link rel="stylesheet" href="/angular-squire/css/vendor.css">
 
@@ -15,7 +17,21 @@
     <base href="/">
     <form class="form" autocomplete="off">
     <div class="container">
-        <h1>Angular-Squire <iframe style="border:none" class="pull-right" src="http://ghbtns.com/github-btn.html?user=hourlynerd&amp;repo=angular-squire&amp;type=watch&amp;count=true" width="80" height="20" title="Star on GitHub"></iframe></h1>
+        <h1>Angular-Squire &nbsp;
+            <a href="http://hourlynerd.github.io/angular-squire">
+                <img id="under-nav"
+                    style="position: absolute; top: 0; right: 0px; border: 0px;"
+                    src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png"
+                    alt="Fork me on GitHub">
+            </a>
+            <iframe style="border:none"
+                class="pull-right"
+                src="http://ghbtns.com/github-btn.html?user=hourlynerd&amp;repo=angular-squire&amp;type=watch&amp;count=true"
+                width="80"
+                height="20"
+                title="Star on GitHub">
+            </iframe>
+        </h1>
         <p class="lead">
             An angularjs wrapper directive for the excellent <a href="https://github.com/neilj/Squire">squire editor</a> by <a href="https://hourlynerd.com/">HourlyNerd Inc</a>.
         </p>
@@ -27,7 +43,7 @@
                 </p>
                 <hr/>
                 <p>
-                    <textarea ng-bind="demo1" style="width: 100%;"></textarea>
+                    <textarea class="form-control" ng-model="demo1" style="width: 100%;"></textarea>
                 </p>
             </div>
             <div class="col-sm-8">
