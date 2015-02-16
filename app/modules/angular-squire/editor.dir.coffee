@@ -185,15 +185,17 @@ angular
                             a is action and @value isnt ""
 
 
-                    editor.removeBold()  if test.testBold
-                    editor.removeItalic()  if test.testItalic
-                    editor.removeUnderline()  if test.testUnderline
-                    editor.removeList()  if test.testOrderedList
-                    editor.removeList()  if test.testUnorderedList
-                    editor.decreaseQuoteLevel()  if test.testQuote
-                    if test.testLink
-                        editor.removeLink()
-                        editor.focus()
+                    if test.testBold or test.testItalic or test.testUnderline or
+                    test.testOrderedList or test.testUnorderedList or test.testQuote or test.testLink
+                        editor.removeBold()  if test.testBold
+                        editor.removeItalic()  if test.testItalic
+                        editor.removeUnderline()  if test.testUnderline
+                        editor.removeList()  if test.testOrderedList
+                        editor.removeList()  if test.testUnorderedList
+                        editor.decreaseQuoteLevel()  if test.testQuote
+                        if test.testLink
+                            editor.removeLink()
+                            editor.focus()
                     else if test.isNotValue("removeLink") then
                         # these will trigger popover, dont do anything
                     else if action == 'makeLink'
