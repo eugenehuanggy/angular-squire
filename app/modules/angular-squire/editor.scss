@@ -215,7 +215,7 @@ $angular-squire-highlight-color: #55ACEE !default;
     text-align: right;
     padding: 4px 4px 0 0;
   }
-  .wrapper {
+  .angular-squire-wrapper {
     position: relative;
     border: 1px solid $angular-squire-wrapper-border;
 
@@ -247,7 +247,7 @@ $angular-squire-highlight-color: #55ACEE !default;
   }
 }
 
-.angular-squire.focus .wrapper .placeholder div {
+.angular-squire.focus .angular-squire-wrapper .placeholder div {
   display: none;
 }
 
