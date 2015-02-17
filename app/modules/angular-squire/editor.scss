@@ -26,6 +26,7 @@ $angular-squire-highlight-color: #55ACEE !default;
   -moz-transition: transition(all 2s);
   -o-transition: transition(all 2s);
   transition: transition(all 2s);
+  outline: none;
 
   .hl {
     border-bottom: 2px $angular-squire-highlight-color solid;
@@ -214,6 +215,7 @@ $angular-squire-highlight-color: #55ACEE !default;
     user-select: none;
     text-align: right;
     padding: 4px 4px 0 0;
+    height: 31px;
   }
   .angular-squire-wrapper {
     position: relative;
