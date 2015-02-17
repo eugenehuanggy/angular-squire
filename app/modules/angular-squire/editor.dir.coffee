@@ -32,6 +32,7 @@ angular
                 editor = scope.editor = null
 
                 LINK_DEFAULT = "http://"
+                IFRAME_CLASS = 'angular-squire-iframe'
 
                 getLinkAtCursor = ->
                     return angular.element(editor.getSelection()
@@ -102,7 +103,7 @@ angular
                         a.setAttribute('rel',  'stylesheet')
                         head.appendChild(a)
                     )
-                    doc.childNodes[0].className = "angular-squire-iframe "
+                    doc.childNodes[0].className = IFRAME_CLASS + " "
                     if scope.editorClass
                         doc.childNodes[0].className += scope.editorClass
 
@@ -135,7 +136,7 @@ angular
                         else
                             element.find('.add-link').removeClass('active')
 
-                        menubar.attr("class", "menu "+p.replace(/>|\.|html|body|div/ig, ' ')
+                        menubar.attr("class", "menu "+p.split("BODY")[1]?.replace(/>|\.|html|body|div/ig, ' ')
                             .toLowerCase())
                     )
 
