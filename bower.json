@@ -1,13 +1,13 @@
 {
     "name": "hn-squire",
-    "version": "0.1.2",
+    "version": "0.1.3",
     "homepage": "https://github.com/HourlyNerd/angular-squire",
     "authors": [
         "HourlyNerd Inc"
     ],
     "main": [
-        "/dist/css/angular-squire.css",
-        "/dist/scripts/angular-squire.js"
+        "dist/css/angular-squire.css",
+        "dist/scripts/angular-squire.js"
     ],
     "description": "angularjs directive for squire rich text editor",
     "license": "MIT",
