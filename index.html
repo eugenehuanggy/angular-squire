@@ -6,19 +6,27 @@
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
 
-    <link rel="stylesheet" href="/angular-squire/css/vendor.css">
+    <link rel="stylesheet" href="https://rawgit.com/HourlyNerd/angular-squire/master/dist/css/vendor.css">
 
-    <link rel="stylesheet" href="/angular-squire/css/angular-squire.css">
+    <link rel="stylesheet" href="https://rawgit.com/HourlyNerd/angular-squire/master/dist/css/angular-squire.css">
 
     <base href="/">
 
+
 </head>
 <body ng-init="value='<b>HourlyNerd</b> The future of consulting.'">
+
+    <style>
+        .angular-squire.ng-invalid.ng-dirty {
+            border: 1px solid #c7254e;
+        }
+    </style>
+
     <base href="/">
     <form class="form" autocomplete="off">
     <div class="container">
         <h1>Angular-Squire &nbsp;
-            <a href="http://hourlynerd.github.io/angular-squire">
+            <a href="https://github.com/hourlynerd/angular-squire/">
                 <img id="under-nav"
                     style="position: absolute; top: 0; right: 0px; border: 0px;"
                     src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png"
@@ -40,17 +48,22 @@
             <div class="col-sm-4">
                 <p>
                     Here is the default editor. It supports adding and removing links, and shows you which styles are under cursor.
+                    <br/>
+                    It also works with angularjs validation out of the box. (type into box, delete it and blur out of editor)
                 </p>
                 <hr/>
                 <p>
-                    <textarea class="form-control" ng-model="demo1" style="width: 100%;"></textarea>
+                    <textarea class="form-control" ng-model="demo1" style="width: 100%; height: 60px; border: 1px solid #ccc;"></textarea>
                 </p>
             </div>
             <div class="col-sm-8">
-                <squire editor-class="foo" height="150px"
-                    ng-model="demo1" name="body" body="value"
-                    placeholder="Type in here!">
-                </squire>
+                <div class="form-group">
+                    <squire class="form-control" editor-class="foo" height="170px"
+                        ng-model="demo1" name="body" body="value"
+                        placeholder="Type in here!"
+                        required>
+                    </squire>
+                </div>
             </div>
         </div>
         <hr/>
@@ -67,7 +80,7 @@
                     </squire-cover>
                     <squire-controls>
                         <div class="form-group">
-                            <button class="btn btn-primary pull-right" type="button">Meow</button>
+                            <button class="btn btn-primary pull-right" style="margin-top: 10px;" type="button">Meow</button>
                         </div>
                     </squire-controls>
                 </squire>
@@ -101,9 +114,9 @@
     <!-- config.json -->
     <!-- endconfig -->
 
-    <script src="/angular-squire/scripts/vendor.js"></script>
+    <script src="https://rawgit.com/HourlyNerd/angular-squire/master/dist/scripts/vendor.js"></script>
 
-    <script src="/angular-squire/scripts/angular-squire.js"></script>
+    <script src="https://rawgit.com/HourlyNerd/angular-squire/master/dist//scripts/angular-squire.js"></script>
 
 </body>
 </html>
