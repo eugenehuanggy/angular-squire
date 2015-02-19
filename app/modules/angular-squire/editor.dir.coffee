@@ -54,8 +54,7 @@ angular
                     editor?.destroy()
                 )
                 scope.showPlaceholder = ->
-                    return angular.element('<div>'+ngModel.$viewValue+'</div>')
-                        .text().trim().length == 0  #it also gets hidden via css on focus
+                    return ngModel.$isEmpty(ngModel.$viewValue) # it also gets hidden via css on focus
 
                 scope.popoverHide = (e, name) ->
                     hide = ->
@@ -92,10 +91,14 @@ angular
                 ngModel.$render = ->
                     editor.setHTML(ngModel.$viewValue || '')
 
-                updateStylesToMatch = ->
-                    doc = editor.getDocument()
-                    head = doc.head
+                ngModel.$isEmpty = (value) ->
+                    if angular.isString(value)
+                        return angular.element("<div>"+value+"</div>").text().trim().length == 0
+                    else
+                        return not value
 
+                updateStylesToMatch = (doc) ->
+                    head = doc.head
                     _.each(angular.element('link'), (el) ->
                         a = doc.createElement('link')
                         a.setAttribute('href',  el.href)
@@ -112,13 +115,22 @@ angular
                 menubar = element.find('.menu')
 
                 iframeLoaded = ->
-                    editor = scope.editor = new Squire(iframe[0].contentWindow.document)
+                    iframeDoc = iframe[0].contentWindow.document
+                    initCount = 0
+                    updateStylesToMatch(iframeDoc)
+                    ngModel.$setPristine()
+
+                    editor = scope.editor = new Squire(iframeDoc)
                     editor.defaultBlockTag = 'P'
 
-                    updateStylesToMatch()
+
 
                     editor.addEventListener("input", ->
-                        updateModel(editor.getHTML())
+                        initCount = initCount + 1
+                        # The first few times this is triggered - its just the editor setting up its internal state.
+                        # we should ignore these events because they trigger validation as if it is user input, but it is not
+                        if initCount > 2
+                            updateModel(editor.getHTML())
                     )
 
                     editor.addEventListener("focus", ->
@@ -127,7 +139,11 @@ angular
                     )
                     editor.addEventListener("blur", ->
                         element.removeClass('focus')
-                        updateModel(editor.getHTML())
+                        if ngModel.$pristine and not ngModel.$isEmpty(ngModel.$viewValue)
+                            ngModel.$setTouched()
+                        else
+                            ngModel.$setPristine()
+
                     )
                     editor.addEventListener("pathChange", ->
                         p = editor.getPath()

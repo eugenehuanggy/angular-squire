@@ -1,5 +1,6 @@
+$angular-squire-border-radius: 5px !default;
 $angular-squire-container-bg: #dde6e8 !default;
-$angular-squire-wrapper-border: #dde6e8 !default;
+$angular-squire-border-color: #dde6e8 !default;
 $angular-squire-popover-bg: #FAFAFA !default;
 $angular-squire-highlight-color: #55ACEE !default;
 
@@ -21,12 +22,21 @@ $angular-squire-highlight-color: #55ACEE !default;
   }
 }
 
+.angular-squire.form-control {
+  height: inherit;
+  padding: 0;
+  border-radius: $angular-squire-border-radius $angular-squire-border-radius 0 0;
+}
+
 .angular-squire {
   -webkit-transition: transition(all 2s);
   -moz-transition: transition(all 2s);
   -o-transition: transition(all 2s);
   transition: transition(all 2s);
   outline: none;
+
+  border: 1px solid $angular-squire-border-color;
+  border-radius: $angular-squire-border-radius $angular-squire-border-radius 0 0;
 
   .hl {
     border-bottom: 2px $angular-squire-highlight-color solid;
@@ -48,8 +58,6 @@ $angular-squire-highlight-color: #55ACEE !default;
     display: none;
     border-radius: 4px;
     min-width: 250px;
-
-
 
     &:after, &:before {
       bottom: 100%;
@@ -138,6 +146,7 @@ $angular-squire-highlight-color: #55ACEE !default;
 
     height: 100%;
     background-color: $angular-squire-container-bg;
+    border-radius: $angular-squire-border-radius;
     .ng-hide {
       height: 0;
     }
@@ -153,14 +162,14 @@ $angular-squire-highlight-color: #55ACEE !default;
   .menu .item {
     position: relative;
     opacity: 0.5;
-    font-size:13px;
+    font-size: 13px;
     padding: 1px 5px;
-    color:#000;
-    float:left;
-    background:#FFF;
-    border-left:1px #EEE solid;
+    color: #000;
+    float: left;
+    background: #FFF;
+    border-left: 1px #EEE solid;
     border-bottom: 2px transparent solid;
-    -webkit-font-smoothing:subpixel-antialiased
+    -webkit-font-smoothing: subpixel-antialiased
   }
   .menu.b .item.bold {
     @extend .hl;
@@ -193,10 +202,9 @@ $angular-squire-highlight-color: #55ACEE !default;
     @extend .hl;
   }
 
-
   .menu .group {
-    display:inline-block;
-    border:1px #EEE solid;
+    display: inline-block;
+    border: 1px #EEE solid;
   }
 
   .menu .group .item:hover, .menu .item:first-child:hover, .menu .item.active:first-child {
@@ -204,7 +212,7 @@ $angular-squire-highlight-color: #55ACEE !default;
   }
 
   .menu .item:first-child {
-    border-left:none;
+    border-left: none;
   }
   .menu {
     -webkit-touch-callout: none;
@@ -219,7 +227,6 @@ $angular-squire-highlight-color: #55ACEE !default;
   }
   .angular-squire-wrapper {
     position: relative;
-    border: 1px solid $angular-squire-wrapper-border;
 
     .placeholder {
       position: absolute;
