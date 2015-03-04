@@ -134,11 +134,11 @@ angular
                     )
 
                     editor.addEventListener("focus", ->
-                        element.addClass('focus')
+                        element.addClass('focus').trigger('focus')
                         scope.editorVisibility(true)
                     )
                     editor.addEventListener("blur", ->
-                        element.removeClass('focus')
+                        element.removeClass('focus').trigger('blur')
                         if ngModel.$pristine and not ngModel.$isEmpty(ngModel.$viewValue)
                             ngModel.$setTouched()
                         else
