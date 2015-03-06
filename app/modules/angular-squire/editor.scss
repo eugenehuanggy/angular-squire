@@ -255,6 +255,11 @@ $angular-squire-highlight-color: #55ACEE !default;
       outline: none;
     }
   }
+    textarea {
+      width: 100%;
+      border: none;
+      padding: 10px;
+    }
 }
 
 .angular-squire.focus .angular-squire-wrapper .placeholder div {

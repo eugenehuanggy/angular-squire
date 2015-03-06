@@ -1,4 +1,7 @@
 <div class='angular-squire'>
+    <textarea ng-show="isCrappyBrowser()"
+        placeholder="{{ placeholder }}">
+    </textarea>
     <div ng-class="{'editor-hide': !isEditorVisible()}" class='editor-container'>
         <div class="menu">
             <div class="group">

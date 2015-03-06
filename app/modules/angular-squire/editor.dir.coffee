@@ -29,6 +29,32 @@ angular
                         return editorVisible
 
             link: (scope, element, attrs, ngModel) ->
+                updateModel = (value) ->
+                    scope.$evalAsync(->
+                        ngModel.$setViewValue(value)
+                    )
+
+                scope.isCrappyBrowser = ->
+                    return /(MSIE|Mozilla)/.test(navigator.userAgent)
+
+                if scope.isCrappyBrowser()
+                    #sorry, its really broken on these browsers right now, so just fall back to a textarea
+                    element.find('.editor-container').remove()
+                    txt = element.find('textarea')
+                    if scope.body
+                        txt.val(txt)
+                    if scope.height
+                        txt.css('height', scope.height)
+                    if scope.width
+                        txt.css('width', scope.width)
+
+                    ngModel.$render = ->
+                        txt.val(ngModel.$viewValue || '')
+                    txt.on('change', (e) -> updateModel(txt.val()))
+                    txt.on('keypress', (e) -> updateModel(txt.val()))
+
+                    return
+
                 editor = scope.editor = null
 
                 LINK_DEFAULT = "http://"
