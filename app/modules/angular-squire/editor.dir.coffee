@@ -35,6 +35,8 @@ angular
                     )
 
                 scope.isCrappyBrowser = ->
+                    if /WebKit/.test(navigator.userAgent)
+                        return false
                     return /(MSIE|Mozilla)/.test(navigator.userAgent)
 
                 if scope.isCrappyBrowser()
