@@ -29,40 +29,29 @@ angular
                         return editorVisible
 
             link: (scope, element, attrs, ngModel) ->
+                LINK_DEFAULT = "http://"
+                IFRAME_CLASS = 'angular-squire-iframe'
+
+                editor = scope.editor = null
+                scope.data =
+                    link: LINK_DEFAULT
+
                 updateModel = (value) ->
                     scope.$evalAsync(->
                         ngModel.$setViewValue(value)
                     )
 
-                scope.isCrappyBrowser = ->
-                    if /WebKit/.test(navigator.userAgent)
-                        return false
-                    return /(MSIE|Mozilla)/.test(navigator.userAgent)
+                ngModel.$render = ->
+                    editor?.setHTML(ngModel.$viewValue || '')
 
-                if scope.isCrappyBrowser()
-                    #sorry, its really broken on these browsers right now, so just fall back to a textarea
-                    element.find('.editor-container').remove()
-                    txt = element.find('textarea')
-                    if scope.body
-                        txt.val(txt)
-                    if scope.height
-                        txt.css('height', scope.height)
-                    if scope.width
-                        txt.css('width', scope.width)
-
-                    ngModel.$render = ->
-                        txt.val(ngModel.$viewValue || '')
-                    txt.on('change', (e) -> updateModel(txt.val()))
-                    txt.on('keypress', (e) -> updateModel(txt.val()))
-
-                    return
-
-                editor = scope.editor = null
-
-                LINK_DEFAULT = "http://"
-                IFRAME_CLASS = 'angular-squire-iframe'
+                ngModel.$isEmpty = (value) ->
+                    if angular.isString(value)
+                        return angular.element("<div>"+value+"</div>").text().trim().length == 0
+                    else
+                        return not value
 
                 getLinkAtCursor = ->
+                    return LINK_DEFAULT if not editor
                     return angular.element(editor.getSelection()
                         .commonAncestorContainer)
                         .closest("a")
@@ -74,9 +63,6 @@ angular
 
                 scope.canAddLink = ->
                     return scope.data.link and scope.data.link != LINK_DEFAULT
-
-                scope.data =
-                    link: LINK_DEFAULT
 
                 scope.$on('$destroy', ->
                     editor?.destroy()
@@ -110,20 +96,6 @@ angular
                     popover = element.find(".squire-popover").find("input").focus().end()
                     popover.css(left: -1 * (popover.width() / 2) + linkElement.width() / 2  + 2)
                     return
-
-                updateModel = (value) ->
-                    scope.$evalAsync(->
-                        ngModel.$setViewValue(value)
-                    )
-
-                ngModel.$render = ->
-                    editor.setHTML(ngModel.$viewValue || '')
-
-                ngModel.$isEmpty = (value) ->
-                    if angular.isString(value)
-                        return angular.element("<div>"+value+"</div>").text().trim().length == 0
-                    else
-                        return not value
 
                 updateStylesToMatch = (doc) ->
                     head = doc.head
@@ -162,11 +134,11 @@ angular
                     )
 
                     editor.addEventListener("focus", ->
-                        element.addClass('focus').trigger('focus')
+                        element.addClass('focus').triggerHandler('focus')
                         scope.editorVisibility(true)
                     )
                     editor.addEventListener("blur", ->
-                        element.removeClass('focus').trigger('blur')
+                        element.removeClass('focus').triggerHandler('blur')
                         if ngModel.$pristine and not ngModel.$isEmpty(ngModel.$viewValue)
                             ngModel.$setTouched()
                         else
@@ -193,13 +165,31 @@ angular
                     editor.makeHeading = ->
                         editor.setFontSize("2em")
                         editor.bold()
-                if /WebKit\//.test(navigator.userAgent)
-                    #chrome doesnt need to wait, and also doesnt fire
-                    # the load event on iframes without a valid src
+
+                ua = navigator.userAgent
+                isChrome = /Chrome/.test(ua)
+                isIE = /rv:11.0|IE/.test(ua)
+                isFF = not isChrome and not isIE
+                loaded = false
+                iframe.on('load', ->
+                    loaded = true
+                )
+                if isChrome
+                    # chrome doesnt fire the load event on iframes without a valid src,
+                    # and doesnt need to lazy load
                     iframeLoaded()
                 else
-                    #firefox et al need to wait for the iframe to load before operating on it
-                    iframe.on('load', iframeLoaded)
+                    element.one("mouseenter", ->
+                        if isFF
+                            #firefox needs to wait for the iframe to load before operating on it
+                            if loaded
+                                iframeLoaded()
+                            else
+                                iframe.on('load', iframeLoaded)
+                        else
+                            iframeLoaded()
+                    )
+
 
                 Squire::testPresenceinSelection = (name, action, format, validation) ->
                     p = @getPath()

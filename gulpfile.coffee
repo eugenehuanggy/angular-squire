@@ -31,7 +31,6 @@ ngAnnotate = require('gulp-ng-annotate')
 imageop = require('gulp-image-optimization')
 karma = require('karma').server
 protractor = require("gulp-protractor").protractor
-sprite = require('css-sprite').stream
 
 error_handle = (err) ->
     console.error(err)
@@ -219,9 +218,9 @@ gulp.task "coffee", ->
             console.log(err)
             this.emit('end')
         )
-        .pipe(sourcemaps.init())
+    #    .pipe(sourcemaps.init())
         .pipe(coffee())
-        .pipe(sourcemaps.write())
+    #    .pipe(sourcemaps.write())
         .pipe(ngAnnotate())
         .pipe(gulp.dest(COMPILE_PATH + "/modules"))
         .on "error", error_handle
@@ -322,24 +321,6 @@ gulp.task('e2e', (cb) ->
         .on('error', (e) -> throw e )
 )
 
-# generate sprite file
-# See: https://github.com/aslansky/css-sprite
-# Compiles images in all modules into base64 encoded sass mixins
-# Must @import "sprite" in file then @include sprite($sprite_name)
-# See .tmp/sprite.scss after compilation step to see variable names.
-# Variable name = $[module_name]-images-[filename_underscore_separated]
-gulp.task('sprite', ->
-    return gulp.src(paths.images)
-    .pipe(sprite({
-        name: "sprite"
-        style: "sprite.scss"
-        cssPath: ""
-        base64: true
-        processor: "scss"
-    }))
-    .pipe(gulp.dest(TEMP_PATH))
-)
-
 gulp.task "update",  ->
     getRemoteCode = (cb) ->
         console.log("Grabbing latest gulpfile from github...")
@@ -372,7 +353,6 @@ gulp.task "default", (cb) ->
     runSequence(['clean:compiled', 'clean:tmp']
                 'copy_deps'
                 'templates'
-                'sprite'
                 ['coffee', 'sass']
                 'inject',
                 'inject:version'
@@ -393,7 +373,6 @@ gulp.task "build", (cb) ->
     runSequence(['clean:dist', 'clean:compiled', 'clean:tmp']
                 'copy_deps'
                 'templates'
-                'sprite'
                 ['coffee', 'sass']
                 'images'
                 'inject',
