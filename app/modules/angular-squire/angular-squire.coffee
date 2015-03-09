@@ -159,7 +159,8 @@ angular
                         else
                             element.find('.add-link').removeClass('active')
 
-                        menubar.attr("class", "menu "+p.split("BODY")[1]?.replace(/>|\.|html|body|div/ig, ' ')
+                        menubar.attr("class", "menu "+
+                            p.split("BODY")[1]?.replace(/>|\.|html|body|div/ig, ' ')
                             .toLowerCase())
                     )
 

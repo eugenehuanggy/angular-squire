@@ -263,11 +263,12 @@ gulp.task "add_sass", ->
     return gulp.src(paths.sass)
     .pipe(rename( (file) ->
         if file.extname != ''
-            file.dirname = path.join(DIST_PATH, 'css')
+            file.dirname = 'css'
+            console.log file
             return file
         else
             return no
-    ))
+    )).pipe(gulp.dest(DIST_PATH))
 
 gulp.task "images", ->
     return gulp.src(paths.images)
