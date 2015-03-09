@@ -3,6 +3,7 @@ $angular-squire-container-bg: #dde6e8 !default;
 $angular-squire-border-color: #dde6e8 !default;
 $angular-squire-popover-bg: #FAFAFA !default;
 $angular-squire-highlight-color: #55ACEE !default;
+$angular-squire-wrapper-padding: 5px 0 !default;
 
 @-webkit-keyframes fadeIn {
   0% {
@@ -227,7 +228,7 @@ $angular-squire-highlight-color: #55ACEE !default;
   }
   .angular-squire-wrapper {
     position: relative;
-    padding: 5px 0;
+    padding: $angular-squire-wrapper-padding;
 
     .placeholder {
       position: absolute;
@@ -262,8 +263,8 @@ $angular-squire-highlight-color: #55ACEE !default;
     }
 }
 
-.angular-squire.focus .angular-squire-wrapper .placeholder div {
-  display: none;
+.angular-squire .angular-squire-wrapper .placeholder div {
+  padding: $angular-squire-wrapper-padding;
 }
 
 html.angular-squire-iframe {

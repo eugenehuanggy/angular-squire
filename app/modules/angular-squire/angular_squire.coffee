@@ -39,6 +39,10 @@ angular
                 updateModel = (value) ->
                     scope.$evalAsync(->
                         ngModel.$setViewValue(value)
+                        if ngModel.$isEmpty(value)
+                            element.removeClass('squire-has-value')
+                        else
+                            element.addClass('squire-has-value')
                     )
 
                 ngModel.$render = ->
@@ -113,29 +117,31 @@ angular
 
                 iframe = element.find('iframe')
                 menubar = element.find('.menu')
+                haveInteraction = false
 
                 iframeLoaded = ->
                     iframeDoc = iframe[0].contentWindow.document
-                    initCount = 0
                     updateStylesToMatch(iframeDoc)
                     ngModel.$setPristine()
 
                     editor = scope.editor = new Squire(iframeDoc)
                     editor.defaultBlockTag = 'P'
 
-
+                    if scope.body
+                        editor.setHTML(scope.body)
+                        updateModel(scope.body)
+                        haveInteraction = true
 
                     editor.addEventListener("input", ->
-                        initCount = initCount + 1
-                        # The first few times this is triggered - its just the editor setting up its internal state.
-                        # we should ignore these events because they trigger validation as if it is user input, but it is not
-                        if initCount > 2
-                            updateModel(editor.getHTML())
+                        if haveInteraction
+                            html = editor.getHTML()
+                            updateModel(html)
                     )
 
                     editor.addEventListener("focus", ->
                         element.addClass('focus').triggerHandler('focus')
                         scope.editorVisibility(true)
+                        haveInteraction = true
                     )
                     editor.addEventListener("blur", ->
                         element.removeClass('focus').triggerHandler('blur')
@@ -143,6 +149,7 @@ angular
                             ngModel.$setTouched()
                         else
                             ngModel.$setPristine()
+                        haveInteraction = true
 
                     )
                     editor.addEventListener("pathChange", ->

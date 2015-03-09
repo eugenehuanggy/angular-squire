@@ -31,6 +31,7 @@ ngAnnotate = require('gulp-ng-annotate')
 imageop = require('gulp-image-optimization')
 karma = require('karma').server
 protractor = require("gulp-protractor").protractor
+header = require('gulp-header')
 
 error_handle = (err) ->
     console.error(err)
@@ -258,6 +259,16 @@ gulp.task "copy_fonts", ->
 gulp.task "copy_fonts:dist", ->
     copyFonts().pipe(gulp.dest(DIST_PATH))
 
+gulp.task "add_sass", ->
+    return gulp.src(paths.sass)
+    .pipe(rename( (file) ->
+        if file.extname != ''
+            file.dirname = path.join(DIST_PATH, 'css')
+            return file
+        else
+            return no
+    ))
+
 gulp.task "images", ->
     return gulp.src(paths.images)
         .pipe(imageop({
@@ -267,6 +278,19 @@ gulp.task "images", ->
         }))
         .pipe(gulp.dest(DIST_PATH, cwd: DIST_PATH))
         .on "error", error_handle
+
+gulp.task "add_banner", ->
+    banner = """/**
+* @preserve <%= pkg.name %> - <%= pkg.description %>
+* @version v<%= pkg.version %>
+* @link <%= pkg.homepage %>
+* @license <%= pkg.license %>
+**/
+
+"""
+    gulp.src(DIST_PATH+"/**/angular-squire.js")
+    .pipe(header(banner, pkg: require(path.join(__dirname, 'bower.json'))))
+    .pipe(gulp.dest(DIST_PATH))
 
 gulp.task "package:dist", ->
     assets = useref.assets()
@@ -379,4 +403,6 @@ gulp.task "build", (cb) ->
                 'inject:version'
                 'bower'
                 'copy_fonts:dist'
-                'package:dist')
+                'package:dist'
+                'add_sass'
+                'add_banner')
