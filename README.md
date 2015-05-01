@@ -64,10 +64,10 @@ squire-controls will place it's contents within the squire div. Its purpose is t
 `squireServiceProvider` is available to configure the directive. It has the following methods:  
 
 *Methods:*
-`onPaste(cb)` - cb = function(e, editor) - e contains `fragment` that will be pasted
-`onChange(cb)` - cb = function(value, editor)
-`strictPaste(isEnabled)` - pass true to only allow `div, span, b, i` elements in pasted content
-`sanitizeOptions(obj)` - Object containing custom (sanitize.js options)[https://github.com/gbirke/Sanitize.js#configuration-object-parameters] to sanitize pasted content
+`onPaste(cb)` - cb = function(e, editor) - e contains `fragment` that will be pasted   
+`onChange(cb)` - cb = function(value, editor)  
+`strictPaste(isEnabled)` - pass true to only allow `div, span, b, i` elements in pasted content  
+`sanitizeOptions(obj)` - Object containing custom (sanitize.js options)[https://github.com/gbirke/Sanitize.js#configuration-object-parameters] to sanitize pasted content  
  
  
 # changing the template
