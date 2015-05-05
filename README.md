@@ -65,11 +65,11 @@ squire-controls will place it's contents within the squire div. Its purpose is t
 
 *Methods:*  
 `onPaste(cb)` cb = function(e, editor) - e contains `fragment` that will be pasted   
-`onChange(cb)` cb = function(e, editor) - e contains `html` that will be set into `ng-model`
-`strictPaste(isEnabled)` (default: false) pass true to only allow `div, span, b, i` elements in pasted content
-`sanitizeOptions.paste(obj)` object containing custom [sanitize.js options](https://github.com/gbirke/Sanitize.js#configuration-object-parameters) to sanitize pasted content
-`sanitizeOptions.input(obj)` object containing custom [sanitize.js options](https://github.com/gbirke/Sanitize.js#configuration-object-parameters) to sanitize ALL content
-`enableSanitizer(isEnabled)` (default: true) should we sanitize all html? only safe attributes and tags which the editor can create are allowed by default. Change behavior via methods above
+`onChange(cb)` cb = function(e, editor) - e contains `html` that will be set into `ng-model`  
+`strictPaste(isEnabled)` (default: false) pass true to only allow `div, span, b, i` elements in pasted content  
+`sanitizeOptions.paste(obj)` object containing custom [sanitize.js options](https://github.com/gbirke/Sanitize.js#configuration-object-parameters) to sanitize pasted content  
+`sanitizeOptions.input(obj)` object containing custom [sanitize.js options](https://github.com/gbirke/Sanitize.js#configuration-object-parameters) to sanitize ALL content  
+`enableSanitizer(isEnabled)` (default: true) should we sanitize all html? only safe attributes and tags which the editor can create are allowed by default. Change behavior via methods above  
 
  
 # changing the template
