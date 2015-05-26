@@ -189,7 +189,7 @@ angular
                         return editor.focus()
 
                 ua = navigator.userAgent
-                isChrome = /Chrome/.test(ua)
+                isChrome = /Chrome/.test(ua) or /Safari/.test(ua)
                 isIE = /rv:11.0|IE/.test(ua)
                 isFF = not isChrome and not isIE
                 loaded = false
