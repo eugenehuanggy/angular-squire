@@ -18,7 +18,6 @@ angular
             ### @ngInject ###
             controller: ($scope) ->
 
-
                 $scope.buttons = _.defaults($scope.buttons or {}, squireService.getButtonDefaults())
 
                 editorVisible = true
@@ -382,10 +381,10 @@ angular
                     e = {html}
                     obj.onChange(e, editor)
                     return e.html
-                setButtonDefaults: (obj) ->
-                    buttonDefaults = obj
-                getButtonDefaults: ->
-                    return buttonDefaults
+            setButtonDefaults: (obj) ->
+                buttonDefaults = obj
+            getButtonDefaults: ->
+                return buttonDefaults
 
 
         @onPaste = (cb) ->
