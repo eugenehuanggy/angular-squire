@@ -5,17 +5,22 @@ angular
             restrict: 'E'
             require: "ngModel"
             scope:
-                height: '@height',
-                width: '@width',
-                body: '=body',
-                placeholder: '@placeholder',
-                editorClass: '@editorClass',
+                height: '@'
+                width: '@'
+                body: '='
+                placeholder: '@'
+                editorClass: '@'
+                buttons: '@'
             replace: true
             transclude: true
             templateUrl: "/modules/angular-squire/editor.html"
 
             ### @ngInject ###
             controller: ($scope) ->
+
+
+                $scope.buttons = _.defaults($scope.buttons or {}, squireService.getButtonDefaults())
+
                 editorVisible = true
                 $scope.isEditorVisible = ->
                     return editorVisible
@@ -322,6 +327,21 @@ angular
 
         }
     ).provider("squireService", [ () ->
+        buttonDefaults =
+            bold: true
+            italic: true
+            underline: true
+            link: true
+            ol: true
+            ul: true
+            quote: true
+            header: true
+            alignRight: true
+            alignLeft: true
+            alignCenter: true
+            undo: true
+            redo: true
+
         defaultSanitize = new Sanitize(
             # So far, only these elements are supported by this directive
             elements: ['div', 'span', 'b', 'i', 'ul', 'ol', 'li', 'blockquote', 'a', 'p', 'br', 'u']
@@ -362,6 +382,11 @@ angular
                     e = {html}
                     obj.onChange(e, editor)
                     return e.html
+                setButtonDefaults: (obj) ->
+                    buttonDefaults = obj
+                getButtonDefaults: ->
+                    return buttonDefaults
+
 
         @onPaste = (cb) ->
             obj.onPaste = cb if cb

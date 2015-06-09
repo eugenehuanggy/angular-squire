@@ -41,7 +41,30 @@ basic usage of the directive looks like this:
 `body` - binding that contains the initial html contents of the editor, if different from `ng-model` (optional)
 `ng-model` - where does the html go? **required**  
 `placeholder` - placeholder text (optional) 
+`buttons` - object containing button visibility options, see below (optional) 
 
+## Changing which buttons show on editor
+
+The `buttons` attribute on the directive can be an object where you can set any of the following keys to false.  
+All keys are optional
+
+```js
+{
+    bold: true
+    italic: true
+    underline: true
+    link: true
+    ol: true
+    ul: true
+    quote: true
+    header: true
+    alignRight: true
+    alignLeft: true
+    alignCenter: true
+    undo: true
+    redo: true
+}
+```
 
 ## With cover and controls
 You can use `<squire-cover>` and `<squire-controls>` elements within the body of the `<squire>` tag.
@@ -76,6 +99,7 @@ squire-controls will place it's contents within the squire div. Its purpose is t
 `sanitizeOptions.paste(obj)` object containing custom [sanitize.js options](https://github.com/gbirke/Sanitize.js#configuration-object-parameters) to sanitize pasted content  
 `sanitizeOptions.input(obj)` object containing custom [sanitize.js options](https://github.com/gbirke/Sanitize.js#configuration-object-parameters) to sanitize ALL content  
 `enableSanitizer(isEnabled)` (default: true) should we sanitize all html? only safe attributes and tags which the editor can create are allowed by default. Change behavior via methods above  
+`setButtonDefaults(obj)` object containing default button visibility for all editors. See 'Changing which buttons show on editor' section for key names
 
  
 # changing the template
