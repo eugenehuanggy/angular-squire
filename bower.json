@@ -1,5 +1,6 @@
 {
   "name": "angular-squire",
+  "version": "0.7.0",
   "homepage": "https://github.com/HourlyNerd/angular-squire",
   "authors": [
     "HourlyNerd Inc"
@@ -26,7 +27,7 @@
     "underscore": "~1.7.0",
     "jquery": ">= 1.9.0",
     "font-awesome": "~4.3.0",
-    "squire-rte": "git://github.com/HourlyNerd/Squire.git#5628d7b1b8c1da9733e8400e0aac60d33c252ac7",
+    "squire-rte": "git://github.com/neilj/Squire.git#fdcef5fc8e6442e5a66d1aa65705311701125317",
     "sanitize.js": "~1.0.0"
   },
   "devDependencies": {},

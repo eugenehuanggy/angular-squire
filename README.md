@@ -2,7 +2,7 @@
 angularjs directive for the [squire rich text editor](https://github.com/neilj/Squire). 
 
 Features:
-- html sanitization with the default configuration (make XSS harder)
+- html sanitization with the default configuration (make XSS harder) 
 - a better ui than squire's example 
 - minimal look and feel
 - my cat loves it
@@ -101,7 +101,10 @@ squire-controls will place it's contents within the squire div. Its purpose is t
 `enableSanitizer(isEnabled)` (default: true) should we sanitize all html? only safe attributes and tags which the editor can create are allowed by default. Change behavior via methods above  
 `setButtonDefaults(obj)` object containing default button visibility for all editors. See 'Changing which buttons show on editor' section for key names
 
- 
+# html sanitization 
+input is sanitized if you include [sanitize.js]( https://github.com/gbirke/Sanitize.js), which is a dependency in bower, so you will have it on hand. 
+
+
 # changing the template
 
 If you want to change the editor's template html, you can do so by putting your custom template into
@@ -136,7 +139,7 @@ $angular-squire-wrapper-padding: 5px 0 !default;
 "underscore": "~1.7.0",
 "jquery": ">= 1.9.0",
 "font-awesome": "~4.3.0",
-"squire-rte": "~1.0.1"
+"squire-rte": "~1.3.0"
 ```
 
 # building

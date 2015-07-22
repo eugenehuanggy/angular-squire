@@ -305,75 +305,6 @@ gulp.task "package:dist", ->
         .pipe(gulp.dest(DIST_PATH))
         .on "error", error_handle
 
-gulp.task "docs", ['clean:docs'], ->
-    return gulp.src(paths.coffee)
-        .pipe(yuidoc({
-            project:
-                name: config.app_name + " Documentation"
-                description: "A quick demo"
-                version: "0.0.1"
-            syntaxtype: 'coffee'
-        }))
-        .pipe(gulp.dest(DOCS_PATH))
-        .on "error", error_handle
-
-gulp.task "karma", ->
-    bower_files = require("wiredep")(directory: BOWER_PATH).js
-    sources = [].concat bower_files, '.tmp/**/*.!(spec).js', '.tmp/+(modules|components)/**/tests/*.spec.js'
-    karma.start({
-        files: sources
-        frameworks: ['mocha']
-        autoWatch: false
-        background: true
-        #logLevel: config.LOG_WARN
-        browsers: [
-            'PhantomJS'
-        ]
-        transports: [
-            'flashsocket'
-            'xhr-polling'
-            'jsonp-polling'
-        ]
-        singleRun: true
-    });
-
-
-gulp.task('e2e', (cb) ->
-    return gulp.src('./app/e2e/**/*.spec.coffee')
-        .pipe(protractor({
-            configFile: "./protractor.config.coffee"
-        }))
-        .on('error', (e) -> throw e )
-)
-
-gulp.task "update",  ->
-    getRemoteCode = (cb) ->
-        console.log("Grabbing latest gulpfile from github...")
-        remoteCode = ""
-        req = https.request({
-            host: 'raw.githubusercontent.com',
-            port: 443,
-            path: '/HourlyNerd/gulp-build/standalone/gulpfile.coffee',
-            method: 'GET'
-            agent: false
-        }, (res) ->
-            res.on('data', (d) ->
-                remoteCode += d
-            )
-            res.on('end', ->
-                cb(remoteCode)
-            )
-        )
-        req.end()
-
-    getRemoteCode((remoteCode) ->
-        localCode = fs.readFileSync('./gulpfile.coffee', 'utf8')
-        if localCode.length != remoteCode.length
-            fs.writeFileSync("./gulpfile.coffee", remoteCode)
-            console.log("The contents of your gulpfile do not match latest. Updating...")
-        else
-            console.log("Your gulpfile matches latest. No update required.")
-    )
 gulp.task "default", (cb) ->
     runSequence(['clean:compiled', 'clean:tmp']
                 'copy_deps'
@@ -387,12 +318,6 @@ gulp.task "default", (cb) ->
                 'watch'
                 cb)
 
-gulp.task "test", (cb) ->
-    runSequence(['clean:compiled', 'clean:tmp']
-                ['coffee', 'sass']
-                'inject'
-                'karma'
-                cb)
 
 gulp.task "build", (cb) ->
     runSequence(['clean:dist', 'clean:compiled', 'clean:tmp']

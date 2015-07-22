@@ -1,3 +1,15 @@
+if typeof exports == 'object'
+    angular = require('angular')
+    $ = require('jquery')
+    _ = require('underscore')
+    Squire = require('squire-rte')
+    module.exports = "angular-squire"
+else
+    angular = window.angular
+    $ = window.jQuery
+    _ = window._
+    Squire = window.Squire
+
 angular
     .module("angular-squire", [])
     .directive("squire", ['squireService', (squireService) ->
@@ -326,7 +338,9 @@ angular
                     return editorCtrl.editorVisibility()
 
         }
-    ).provider("squireService", [ () ->
+    ).provider("squireService", [ ($window) ->
+        haveSanatize = typeof $window.Sanitize != 'undefined'
+
         buttonDefaults =
             bold: true
             italic: true
@@ -342,20 +356,21 @@ angular
             undo: true
             redo: true
 
-        defaultSanitize = new Sanitize(
-            # So far, only these elements are supported by this directive
-            elements: ['div', 'span', 'b', 'i', 'ul', 'ol', 'li', 'blockquote', 'a', 'p', 'br', 'u']
-            attributes:
-                '__ALL__': ['class']
-                a: ['href', 'title', 'target', 'rel']
-            protocols:
-                a: { href: ['ftp', 'http', 'https', 'mailto', 'gopher']}
-        )
-        sanitizer =
-            paste: defaultSanitize
-            input: defaultSanitize
+        if haveSanatize
+            defaultSanitize = new Sanitize(
+                # So far, only these elements are supported by this directive
+                elements: ['div', 'span', 'b', 'i', 'ul', 'ol', 'li', 'blockquote', 'a', 'p', 'br', 'u']
+                attributes:
+                    '__ALL__': ['class']
+                    a: ['href', 'title', 'target', 'rel']
+                protocols:
+                    a: { href: ['ftp', 'http', 'https', 'mailto', 'gopher']}
+            )
+            sanitizer =
+                paste: defaultSanitize
+                input: defaultSanitize
 
-        doSanitize = true
+        doSanitize = haveSanatize
 
         obj =
             onPaste: (e, editor) ->
@@ -395,25 +410,36 @@ angular
             obj.onChange = cb if cb
 
         # https://github.com/gbirke/Sanitize.js
+        ensureSupport = (fn) ->
+            if haveSanatize
+                return fn
+            else
+                return ->
+                    throw new Error("Angular-Squire: you must include https://github.com/gbirke/Sanitize.js to use sanitize options")
+
         @sanitizeOptions =
-            paste: (opts) ->
+            paste: ensureSupport((opts) ->
                 sanitizer.paste = new Sanitize(opts) if opts
-            input: (opts) ->
+            )
+            input: ensureSupport((opts) ->
                 sanitizer.input = new Sanitize(opts) if opts
+            )
 
 
-        @strictPaste = (enable) ->
+        @strictPaste = ensureSupport((enable) ->
             if enable
                 sanitizer.paste = new Sanitize({
                     elements: ['div', 'span', 'b', 'i', 'u', 'br', 'p']
                 })
             else
                 sanitizer.paste = defaultSanitize
+        )
 
         # sanitize any html that goes into the editor
         # by default only things you can enter in the editor are allowed (helps with xss / evil)
-        @enableSanitizer = (enable=true) ->
+        @enableSanitizer = ensureSupport((enable=true) ->
             doSanitize = enable
+        )
 
         @$get = ->
             return obj
