@@ -1,6 +1,6 @@
 {
   "name": "angular-squire",
-  "version": "0.7.0",
+  "version": "0.7.1",
   "description": "angularjs directive for squire rich text editor",
   "main": "dist/scripts/angular-squire.js",
   "dependencies": {
