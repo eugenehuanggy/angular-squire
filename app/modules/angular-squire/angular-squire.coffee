@@ -340,8 +340,8 @@ angular
                     return editorCtrl.editorVisibility()
 
         }
-    ).provider("squireService", ['$window', ($window) ->
-        haveSanatize = typeof $window.Sanitize != 'undefined'
+    ).provider("squireService", [() ->
+        haveSanatize = typeof window.Sanitize != 'undefined'
 
         buttonDefaults =
             bold: true
