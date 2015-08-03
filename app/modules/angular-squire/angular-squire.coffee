@@ -2,7 +2,7 @@ if typeof exports == 'object'
     angular = require('angular')
     $ = require('jquery')
     _ = require('underscore')
-    Squire = require('squire-rte')
+    Squire = window.Squire or require('squire-rte') # TODO: remove the window ref here, i need it because squire does publish new versions quick enough :P
     module.exports = "angular-squire"
 else
     angular = window.angular
