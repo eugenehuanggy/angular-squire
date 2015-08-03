@@ -29,9 +29,10 @@ angular
 
             ### @ngInject ###
             controller: ($scope) ->
+                buttons = {}
                 if $scope.buttons
                     buttons = $scope.$eval($scope.buttons)
-                    $scope.buttonVis = _.defaults(buttons or {}, squireService.getButtonDefaults())
+                $scope.buttonVis = _.defaults(buttons or {}, squireService.getButtonDefaults())
 
                 editorVisible = true
                 $scope.isEditorVisible = ->
