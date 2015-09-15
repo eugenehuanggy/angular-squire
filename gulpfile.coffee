@@ -119,6 +119,7 @@ gulp.task "inject", ->
     target = gulp.src("./app/index.html")
     sources = gulp.src([
         "./.compiled/modules/**/*.css"
+        "./.compiled/squire-raw.js"
         "./.compiled/modules/"+config.main_module_name+"/"+config.main_module_name+".module.js"
         "./.compiled/modules/"+config.main_module_name+"/*.provider.js"
         "./.compiled/modules/"+config.main_module_name+"/*.run.js"
@@ -129,8 +130,6 @@ gulp.task "inject", ->
         "./.compiled/config.js"
         "./.compiled/modules/**/*.run.js"
         "./.compiled/modules/**/*.js"
-        "!./.compiled/modules/**/tests/*"
-        "!./.compiled/modules/**/*.backend.js"
     ], read: false)
 
     return target
@@ -256,6 +255,12 @@ copyFonts = ->
 gulp.task "copy_fonts", ->
     copyFonts().pipe(gulp.dest(COMPILE_PATH))
 
+gulp.task "copy_squire", ->
+    return gulp.src(["./app/bower_components/squire-rte/build/squire-raw.js"], {
+            dot: true
+            base: "./app/bower_components/squire-rte/build/"
+        }).pipe(gulp.dest(COMPILE_PATH))
+
 gulp.task "copy_fonts:dist", ->
     copyFonts().pipe(gulp.dest(DIST_PATH))
 
@@ -286,6 +291,8 @@ gulp.task "add_banner", ->
 * @version v<%= pkg.version %>
 * @link <%= pkg.homepage %>
 * @license <%= pkg.license %>
+*
+* angular-squire includes squire-rte which is Copyright © by Neil Jenkins. MIT Licensed.
 **/
 
 """
@@ -308,6 +315,7 @@ gulp.task "package:dist", ->
 gulp.task "default", (cb) ->
     runSequence(['clean:compiled', 'clean:tmp']
                 'copy_deps'
+                'copy_squire'
                 'templates'
                 ['coffee', 'sass']
                 'inject',
@@ -322,6 +330,7 @@ gulp.task "default", (cb) ->
 gulp.task "build", (cb) ->
     runSequence(['clean:dist', 'clean:compiled', 'clean:tmp']
                 'copy_deps'
+                'copy_squire'
                 'templates'
                 ['coffee', 'sass']
                 'images'

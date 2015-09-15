@@ -6,7 +6,8 @@
     },
     "bower_exclude": [
         "/chai/",
-        "/angular-mocks/"
+        "/angular-mocks/",
+        "/squire-rte/"
     ],
     "main_module_name": "angular-squire"
 }

@@ -1,16 +1,3 @@
-# TODO: make this work later :P
-#if typeof exports == 'object'
-#    angular = require('angular')
-#    $ = require('jquery')
-#    _ = require('underscore')
-#    Squire = window.Squire or require('squire-rte')
-#    module.exports = "angular-squire"
-#else
-angular = window.angular
-$ = window.jQuery
-_ = window._
-Squire = window.Squire
-
 angular
     .module("angular-squire", [])
     .directive("squire", ['squireService', (squireService) ->
