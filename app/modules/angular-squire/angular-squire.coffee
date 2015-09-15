@@ -328,7 +328,7 @@ angular
 
         }
     ).provider("squireService", [() ->
-        haveSanatize = typeof window.Sanitize != 'undefined'
+        haveSanitize = not angular.isUndefined(window.Sanitize)
 
         buttonDefaults =
             bold: true
@@ -345,7 +345,7 @@ angular
             undo: true
             redo: true
 
-        if haveSanatize
+        if haveSanitize
             defaultSanitize = new Sanitize(
                 # So far, only these elements are supported by this directive
                 elements: ['div', 'span', 'b', 'i', 'ul', 'ol', 'li', 'blockquote', 'a', 'p', 'br', 'u']
@@ -359,7 +359,7 @@ angular
                 paste: defaultSanitize
                 input: defaultSanitize
 
-        doSanitize = haveSanatize
+        doSanitize = haveSanitize
 
         obj =
             onPaste: (e, editor) ->
@@ -400,7 +400,7 @@ angular
 
         # https://github.com/gbirke/Sanitize.js
         ensureSupport = (fn) ->
-            if haveSanatize
+            if haveSanitize
                 return fn
             else
                 return ->

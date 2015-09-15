@@ -13,9 +13,10 @@ Check out the [DEMO](http://hourlynerd.github.io/angular-squire/)
 
 ```bash
 bower install angular-squire --save
+npm install angular-squire --save
 ```
 
-![npm](https://nodei.co/npm/angular-squire.png)
+
 
 or include the following in your code:
 
