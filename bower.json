@@ -27,7 +27,7 @@
     "underscore": "~1.7.0",
     "jquery": ">= 1.9.0",
     "font-awesome": "~4.3.0",
-    "squire-rte": "git://github.com/neilj/Squire.git#0ec3c43791fb982d1370424ab8e1a489c52690e4",
+    "squire-rte": "~1.4.1",
     "sanitize.js": "~1.0.0"
   },
   "devDependencies": {},

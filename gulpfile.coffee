@@ -315,7 +315,7 @@ gulp.task "package:dist", ->
 gulp.task "default", (cb) ->
     runSequence(['clean:compiled', 'clean:tmp']
                 'copy_deps'
-                'copy_squire'
+                #'copy_squire'
                 'templates'
                 ['coffee', 'sass']
                 'inject',
@@ -330,7 +330,7 @@ gulp.task "default", (cb) ->
 gulp.task "build", (cb) ->
     runSequence(['clean:dist', 'clean:compiled', 'clean:tmp']
                 'copy_deps'
-                'copy_squire'
+           #     'copy_squire'
                 'templates'
                 ['coffee', 'sass']
                 'images'

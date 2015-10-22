@@ -1,4 +1,12 @@
-angular
+canRequire = module != undefined and module.exports
+
+if canRequire
+    SQ = require('squire-rte')
+    module.exports = 'angular-squire'
+else
+    SQ = window.Squire
+
+(if canRequire then require('angular') else window.angular)
     .module("angular-squire", [])
     .directive("squire", ['squireService', (squireService) ->
         return {
@@ -33,6 +41,7 @@ angular
                             $scope.editor?.focus()
                     else
                         return editorVisible
+                return
 
             link: (scope, element, attrs, ngModel) ->
                 LINK_DEFAULT = "http://"
@@ -133,7 +142,7 @@ angular
                     updateStylesToMatch(iframeDoc)
                     ngModel.$setPristine()
 
-                    editor = scope.editor = new Squire(iframeDoc)
+                    editor = scope.editor = new SQ(iframeDoc)
                     editor.defaultBlockTag = 'P'
 
                     if scope.body
@@ -219,7 +228,7 @@ angular
                     )
 
 
-                Squire::testPresenceinSelection = (name, action, format, validation) ->
+                SQ::testPresenceinSelection = (name, action, format, validation) ->
                     p = @getPath()
                     test = (validation.test(p) | @hasFormat(format))
                     return name is action and test
