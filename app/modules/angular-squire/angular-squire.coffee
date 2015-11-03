@@ -90,12 +90,17 @@ else
                     editor?.destroy()
                 )
                 scope.showPlaceholder = ->
-                    return ngModel.$isEmpty(ngModel.$viewValue) # it also gets hidden via css on focus
+                    # it also gets hidden via css on focus
+                    return ngModel.$isEmpty(ngModel.$viewValue)
 
                 scope.popoverHide = (e, name) ->
                     hide = ->
-                        angular.element(e.target).closest(".popover-visible").removeClass("popover-visible")
+                        angular.element(e.target)
+                            .closest(".popover-visible")
+                            .removeClass("popover-visible")
+
                         scope.action(name)
+
                     if e.keyCode
                         hide() if e.keyCode == 13
                     else
@@ -121,7 +126,7 @@ else
 
                 updateStylesToMatch = (doc) ->
                     head = doc.head
-                    _.each(angular.element('link'), (el) ->
+                    _.each(angular.element('link[rel="stylesheet"]'), (el) ->
                         a = doc.createElement('link')
                         a.setAttribute('href',  el.href)
                         a.setAttribute('type',  'text/css')
@@ -258,7 +263,8 @@ else
 
 
                     if test.testBold or test.testItalic or test.testUnderline or
-                    test.testOrderedList or test.testUnorderedList or test.testQuote or test.testLink
+                    test.testOrderedList or test.testUnorderedList or test.testQuote or
+                    test.testLink
                         editor.removeBold()  if test.testBold
                         editor.removeItalic()  if test.testItalic
                         editor.removeUnderline()  if test.testUnderline
@@ -357,7 +363,8 @@ else
         if haveSanitize
             defaultSanitize = new Sanitize(
                 # So far, only these elements are supported by this directive
-                elements: ['div', 'span', 'b', 'i', 'ul', 'ol', 'li', 'blockquote', 'a', 'p', 'br', 'u']
+                elements:
+                    ['div', 'span', 'b', 'i', 'ul', 'ol', 'li', 'blockquote', 'a', 'p', 'br', 'u']
                 attributes:
                     '__ALL__': ['class']
                     a: ['href', 'title', 'target', 'rel']
@@ -412,8 +419,11 @@ else
             if haveSanitize
                 return fn
             else
+                msg =
+                    "Angular-Squire: you must include https://github.com/gbirke/Sanitize.js to " +
+                    " use sanitize options"
                 return ->
-                    throw new Error("Angular-Squire: you must include https://github.com/gbirke/Sanitize.js to use sanitize options")
+                    throw new Error(msg)
 
         @sanitizeOptions =
             paste: ensureSupport((opts) ->
