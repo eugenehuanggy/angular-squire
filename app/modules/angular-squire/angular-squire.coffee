@@ -151,9 +151,11 @@ else
                     editor = scope.editor = new SQ(iframeDoc)
                     editor.defaultBlockTag = 'P'
 
-                    if scope.body
-                        editor.setHTML(scope.body)
-                        updateModel(scope.body)
+                    initialContent = scope.body || ngModel.$viewValue
+
+                    if initialContent
+                        editor.setHTML(initialContent)
+                        updateModel(initialContent)
                         haveInteraction = true
 
                     editor.addEventListener("willPaste", (e) ->
