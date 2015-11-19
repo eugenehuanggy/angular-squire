@@ -1,4 +1,4 @@
-canRequire = module != undefined and module.exports
+canRequire = module? and module.exports
 
 if canRequire
     SQ = require('squire-rte')
