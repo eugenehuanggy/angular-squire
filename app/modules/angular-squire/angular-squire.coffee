@@ -138,7 +138,8 @@ else
                         doc.childNodes[0].className += scope.editorClass
 
 
-                iframe = element.find('iframe')
+                iframe = angular.element('<iframe frameborder="0" border="0" marginwidth="0"
+                                            marginheight="0" src="about:blank"></iframe>')
                 menubar = element.find('.menu')
                 haveInteraction = false
 
@@ -208,29 +209,8 @@ else
                         , true)
                         return editor.focus()
 
-                ua = navigator.userAgent
-                isChrome = /Chrome/.test(ua) or /Safari/.test(ua)
-                isIE = /rv:11.0|IE/.test(ua)
-                isFF = not isChrome and not isIE
-                loaded = false
-                iframe.on('load', ->
-                    loaded = true
-                )
-                if isChrome
-                    # chrome doesnt fire the load event on iframes without a valid src,
-                    # and doesnt need to lazy load
-                    iframeLoaded()
-                else
-                    element.one("mouseenter", ->
-                        if isFF
-                            #firefox needs to wait for the iframe to load before operating on it
-                            if loaded
-                                iframeLoaded()
-                            else
-                                iframe.on('load', iframeLoaded)
-                        else
-                            iframeLoaded()
-                    )
+                iframe.on('load', iframeLoaded)
+                element.find('.angular-squire-wrapper').append(iframe)
 
 
                 SQ::testPresenceinSelection = (name, action, format, validation) ->
