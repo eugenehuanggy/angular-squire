@@ -25,6 +25,8 @@ or include the following in your code:
 /dist/scripts/angular-squire.js
 ```
 
+Don't forget to include squire-rte before this script!
+
 # usage
 
 add an angular module dependency: `angular-squire`
@@ -138,11 +140,11 @@ $angular-squire-wrapper-padding: 5px 0 !default;
 # depends on
 
 ```js
-"angular": "~1.3.8",
-"underscore": "~1.7.0",
-"jquery": ">= 1.9.0",
+"angular": ">=1.3.8",
+"underscore": ">=1.7.0",
+"jquery": ">=1.9.0",
 "font-awesome": "~4.3.0",
-"squire-rte": "~1.3.0"
+"squire-rte": ">=1.3.0"
 ```
 
 # building
