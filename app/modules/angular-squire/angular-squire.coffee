@@ -5,6 +5,8 @@ if canRequire
     module.exports = 'angular-squire'
 else
     SQ = window.Squire
+if typeof SQ != "function"
+    throw new Error("angular-squire requires squire-rte script to be loaded before it. Get it from https://github.com/neilj/Squire")
 
 (if canRequire then require('angular') else window.angular)
     .module("angular-squire", [])
