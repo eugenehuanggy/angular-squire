@@ -2,10 +2,10 @@
 angularjs directive for the [squire rich text editor](https://github.com/neilj/Squire). 
 
 Features:
-- html sanitization with the default configuration (make XSS harder) 
-- a better ui than squire's example 
+- a more functional ui than squire's example 
 - minimal look and feel
 - my cat loves it
+- optional configurable html sanitization (requires sanatize.js - which is not included)
 
 Check out the [DEMO](http://hourlynerd.github.io/angular-squire/)
 
