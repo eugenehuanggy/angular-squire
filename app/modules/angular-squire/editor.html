@@ -36,16 +36,16 @@
                                 placeholder="Link URL"
                                 ng-model="data.link"
                                 ng-keydown="popoverHide($event, 'makeLink')" />
-                            <button class="double r" ng-show="canRemoveLink()"
+                            <button type="button" class="double r" ng-show="canRemoveLink()"
                                 ng-click="popoverHide($event, 'removeLink')">
                                 <span class="fa fa-remove"></span> Remove Link
                             </button>
-                            <button class="double l" ng-show="canRemoveLink()"
+                            <button type="button" class="double l" ng-show="canRemoveLink()"
                                 ng-class="{disabled: !canAddLink()}"
                                 ng-click="popoverHide($event, 'makeLink')">
                                 <span class="fa fa-edit"></span> Update Link
                             </button>
-                            <button ng-hide="canRemoveLink()"
+                            <button type="button" ng-hide="canRemoveLink()"
                                 ng-class="{disabled: !canAddLink()}"
                                 ng-click="popoverHide($event, 'makeLink')">
                                 <span class="fa fa-plus"></span> Insert Link
