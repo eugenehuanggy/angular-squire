@@ -19,18 +19,13 @@ inject = require("gulp-inject")
 coffeelint = require('gulp-coffeelint')
 del = require('del')
 vinylPaths = require('vinyl-paths')
-ngClassify = require('gulp-ng-classify')
 runSequence = require('run-sequence')
 minifyCss = require('gulp-minify-css')
 uglify = require('gulp-uglify')
 useref = require('gulp-useref')
 rename = require('gulp-rename')
 gulpIf = require('gulp-if')
-yuidoc = require("gulp-yuidoc")
 ngAnnotate = require('gulp-ng-annotate')
-imageop = require('gulp-image-optimization')
-karma = require('karma').server
-protractor = require("gulp-protractor").protractor
 header = require('gulp-header')
 
 error_handle = (err) ->
@@ -64,16 +59,6 @@ paths =
     fonts: BOWER_PATH + '/**/*.+(woff|woff2|svg|ttf|eot)'
     hn_assets: BOWER_PATH + '/hn-*/app/modules/**/*.*'
 
-
-ngClassifyOptions =
-    controller:
-        format: 'upperCamelCase'
-        suffix: 'Controller'
-    constant:
-        format: '*' #unchanged
-    appName: config.app_name
-    provider:
-        suffix: ''
 
 gulp.task('watch', ->
     watch(paths.sass, ->
@@ -213,7 +198,6 @@ gulp.task "coffee", ->
     return gulp.src(paths.coffee)
         .pipe(coffeelint())
         .pipe(coffeelint.reporter())
-        .pipe(ngClassify(ngClassifyOptions))
         .on("error", (err) ->
             console.log(err)
             this.emit('end')
@@ -275,15 +259,6 @@ gulp.task "add_sass", ->
             return no
     )).pipe(gulp.dest(DIST_PATH))
 
-gulp.task "images", ->
-    return gulp.src(paths.images)
-        .pipe(imageop({
-            optimizationLevel: 5
-            progressive: true
-            interlaced: true
-        }))
-        .pipe(gulp.dest(DIST_PATH, cwd: DIST_PATH))
-        .on "error", error_handle
 
 gulp.task "add_banner", ->
     banner = """/**
@@ -300,17 +275,22 @@ gulp.task "add_banner", ->
     .pipe(header(banner, pkg: require(path.join(__dirname, 'bower.json'))))
     .pipe(gulp.dest(DIST_PATH))
 
-gulp.task "package:dist", ->
+gulp.task "package:dist", () ->
     assets = useref.assets()
-    return gulp.src(COMPILE_PATH + "/index.html")
-        .pipe(assets)
-        .pipe(gulpIf('*.js', ngAnnotate()))
-        .pipe(gulpIf('*.js', uglify()))
-        .pipe(gulpIf('*.css', minifyCss()))
-        .pipe(assets.restore())
-        .pipe(useref())
-        .pipe(gulp.dest(DIST_PATH))
-        .on "error", error_handle
+    return gulp.src(path.join(COMPILE_PATH, "index.html"))
+    .pipe(assets)
+    .pipe(gulpIf('*.css', minifyCss({
+        cache: true
+        compatibility: 'colors.opacity' # ie doesnt like rgba values :P
+    })))
+    .pipe(assets.restore())
+    .pipe(useref())
+    .pipe(gulp.dest(DIST_PATH))
+    .pipe(gulpIf('*.js', uglify()))
+    .pipe(gulpIf('*.js', rename({ extname: '.min.js' })))
+    .pipe(gulpIf('*.css', rename({ extname: '.min.css' })))
+    .pipe(gulp.dest(DIST_PATH))
+    .on "error", error_handle
 
 gulp.task "default", (cb) ->
     runSequence(['clean:compiled', 'clean:tmp']
@@ -333,7 +313,6 @@ gulp.task "build", (cb) ->
            #     'copy_squire'
                 'templates'
                 ['coffee', 'sass']
-                'images'
                 'inject',
                 'inject:version'
                 'bower'

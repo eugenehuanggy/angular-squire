@@ -21,9 +21,10 @@ npm install angular-squire --save
 or include the following in your code:
 
 ```bash
-/dist/css/angular-squire.css
-/dist/scripts/angular-squire.js
+/dist/css/angular-squire.min.css
+/dist/scripts/angular-squire.min.js
 ```
+(or the non `.min` versions)
 
 Don't forget to include squire-rte before this script!
 
@@ -141,9 +142,7 @@ $angular-squire-wrapper-padding: 5px 0 !default;
 
 ```js
 "angular": ">=1.3.8",
-"underscore": ">=1.7.0",
 "jquery": ">=1.9.0",
-"font-awesome": "~4.3.0",
 "squire-rte": ">=1.3.0"
 ```
 
