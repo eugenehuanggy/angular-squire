@@ -39,11 +39,11 @@ if typeof SQ != "function"
 
                 $scope.editorVisibility = @editorVisibility = (vis) ->
                     if arguments.length == 1
-                        editorVisible = vis
-                        if vis
+                        if editorVisible != vis
                             $scope.editor?.focus()
-                    else
-                        return editorVisible
+                        editorVisible = vis
+                    return editorVisible
+
                 return
 
             link: (scope, element, attrs, ngModel) ->

@@ -54,13 +54,14 @@
           $scope.editorVisibility = this.editorVisibility = function(vis) {
             var ref;
             if (arguments.length === 1) {
-              editorVisible = vis;
-              if (vis) {
-                return (ref = $scope.editor) != null ? ref.focus() : void 0;
+              if (editorVisible !== vis) {
+                if ((ref = $scope.editor) != null) {
+                  ref.focus();
+                }
               }
-            } else {
-              return editorVisible;
+              editorVisible = vis;
             }
+            return editorVisible;
           };
         }],
         link: function(scope, element, attrs, ngModel) {
