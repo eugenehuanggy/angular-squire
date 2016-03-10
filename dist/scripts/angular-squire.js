@@ -199,8 +199,6 @@
               element.removeClass('focus').triggerHandler('blur');
               if (ngModel.$pristine && !ngModel.$isEmpty(ngModel.$viewValue)) {
                 ngModel.$setTouched();
-              } else {
-                ngModel.$setPristine();
               }
               return haveInteraction = true;
             });

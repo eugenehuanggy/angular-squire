@@ -180,10 +180,7 @@ if typeof SQ != "function"
                         element.removeClass('focus').triggerHandler('blur')
                         if ngModel.$pristine and not ngModel.$isEmpty(ngModel.$viewValue)
                             ngModel.$setTouched()
-                        else
-                            ngModel.$setPristine()
                         haveInteraction = true
-
                     )
                     editor.addEventListener("pathChange", ->
                         p = editor.getPath()
