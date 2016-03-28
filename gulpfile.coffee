@@ -264,15 +264,14 @@ gulp.task "add_banner", ->
     banner = """/**
 * @preserve <%= pkg.name %> - <%= pkg.description %>
 * @version v<%= pkg.version %>
-* @link <%= pkg.homepage %>
-* @license <%= pkg.license %>
+* @license MIT
 *
 * angular-squire includes squire-rte which is Copyright © by Neil Jenkins. MIT Licensed.
 **/
 
 """
     gulp.src(DIST_PATH+"/**/angular-squire.js")
-    .pipe(header(banner, pkg: require(path.join(__dirname, 'bower.json'))))
+    .pipe(header(banner, pkg: require(path.join(__dirname, 'package.json'))))
     .pipe(gulp.dest(DIST_PATH))
 
 gulp.task "package:dist", () ->
