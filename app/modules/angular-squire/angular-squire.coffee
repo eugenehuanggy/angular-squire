@@ -22,6 +22,7 @@ if typeof SQ != "function"
                 placeholder: '@'
                 editorClass: '@'
                 buttons: '@'
+                theme: '=' # currently only supports 'dark' or not setting it
             replace: true
             transclude: true
             templateUrl: "/modules/angular-squire/editor.html"
@@ -30,8 +31,8 @@ if typeof SQ != "function"
             controller: ($scope) ->
                 buttons = {}
                 if $scope.buttons
-                    buttons = $scope.$eval($scope.buttons)
-                $scope.buttonVis = _.defaults(buttons or {}, squireService.getButtonDefaults())
+                    buttons = $scope.$eval($scope.buttons) or {}
+                $scope.buttonVis = Object.assign({}, squireService.getButtonDefaults(), buttons)
 
                 editorVisible = true
                 $scope.isEditorVisible = ->
@@ -52,12 +53,14 @@ if typeof SQ != "function"
 
                 HEADER_CLASS = 'h4'
 
+                themeClass = if attrs.theme then 'angular-squire-theme-'+attrs.theme else ''
+
+
                 editor = scope.editor = null
                 scope.data =
                     link: LINK_DEFAULT
 
                 updateModel = (value) ->
-                    value = squireService.sanitize.input(value, editor)
                     scope.$evalAsync(->
                         ngModel.$setViewValue(value)
                         if ngModel.$isEmpty(value)
@@ -129,14 +132,20 @@ if typeof SQ != "function"
 
                 updateStylesToMatch = (doc) ->
                     head = doc.head
-                    _.each(angular.element('link[rel="stylesheet"]'), (el) ->
-                        a = doc.createElement('link')
-                        a.setAttribute('href',  el.href)
-                        a.setAttribute('type',  'text/css')
-                        a.setAttribute('rel',  'stylesheet')
-                        head.appendChild(a)
-                    )
-                    doc.childNodes[0].className = IFRAME_CLASS + " "
+
+                    if squireService.isCopyStyles()
+                        angular.element('link[rel="stylesheet"]').each(() ->
+                            a = doc.createElement('link')
+                            a.setAttribute('href',  this.href)
+                            a.setAttribute('type',  'text/css')
+                            a.setAttribute('rel',  'stylesheet')
+                            head.appendChild(a)
+                        )
+                    customStyles = "<style id='angular-squire-styles'>"+squireService.getCustomStyles()+"</style>";
+                    if customStyles
+                        head.insertAdjacentHTML('beforeend', customStyles)
+
+                    doc.childNodes[0].className = IFRAME_CLASS + " " + themeClass
                     if scope.editorClass
                         doc.childNodes[0].className += scope.editorClass
 
@@ -161,9 +170,10 @@ if typeof SQ != "function"
                         updateModel(initialContent)
                         haveInteraction = true
 
-                    editor.addEventListener("willPaste", (e) ->
-                        squireService.sanitize.paste(e, editor)
-                    )
+
+
+                    element.addClass(themeClass)
+
 
                     editor.addEventListener("input", ->
                         if haveInteraction
@@ -325,111 +335,38 @@ if typeof SQ != "function"
 
         }
     ).provider("squireService", [() ->
-        haveSanitize = not angular.isUndefined(window.Sanitize)
 
-        buttonDefaults =
+        @buttonDefaults =
             bold: true
             italic: true
             underline: true
             link: true
             ol: true
             ul: true
-            quote: true
-            header: true
-            alignRight: true
-            alignLeft: true
-            alignCenter: true
-            undo: true
-            redo: true
+            quote: false
+            header: false
+            alignRight: false
+            alignLeft: false
+            alignCenter: false
+            undo: false
+            redo: false
 
-        if haveSanitize
-            defaultSanitize = new Sanitize(
-                # So far, only these elements are supported by this directive
-                elements:
-                    ['div', 'span', 'b', 'i', 'ul', 'ol', 'li', 'blockquote', 'a', 'p', 'br', 'u']
-                attributes:
-                    '__ALL__': ['class']
-                    a: ['href', 'title', 'target', 'rel']
-                protocols:
-                    a: { href: ['ftp', 'http', 'https', 'mailto', 'gopher']}
-            )
-            sanitizer =
-                paste: defaultSanitize
-                input: defaultSanitize
-
-        doSanitize = haveSanitize
+        @copyStyles = false
+        @customStyles = 'body {background-color: transparent}';
 
         obj =
-            onPaste: (e, editor) ->
-            onChange: (val, editor) ->
-                return val
-            sanitize:
-                paste: (e, editor) ->
-                    e.fragment = sanitizer.paste.clean_node(e.fragment) if doSanitize
-                    obj.onPaste(e, editor)
-                input: (html, editor) ->
-                    if doSanitize
-                        fragment = document.createDocumentFragment()
-                        tmp = document.createElement('body')
-                        tmp.innerHTML = html
-                        while (child = tmp.firstChild)
-                            fragment.appendChild(child)
-                        fragment = sanitizer.input.clean_node(fragment)
-                        while (child = fragment.firstChild)
-                            tmp.appendChild(child)
-                        newHtml = tmp.innerHTML
-                        if html != newHtml
-                            editor.setHTML(newHtml)
-                            html = newHtml
-                    e = {html}
-                    obj.onChange(e, editor)
-                    return e.html
-            setButtonDefaults: (obj) ->
-                buttonDefaults = obj
-            getButtonDefaults: ->
-                return buttonDefaults
-
-
-        @onPaste = (cb) ->
-            obj.onPaste = cb if cb
-
-        @onChange = (cb) ->
-            obj.onChange = cb if cb
-
-        # https://github.com/gbirke/Sanitize.js
-        ensureSupport = (fn) ->
-            if haveSanitize
-                return fn
-            else
-                msg =
-                    "Angular-Squire: you must include https://github.com/gbirke/Sanitize.js to " +
-                    " use sanitize options"
-                return ->
-                    throw new Error(msg)
-
-        @sanitizeOptions =
-            paste: ensureSupport((opts) ->
-                sanitizer.paste = new Sanitize(opts) if opts
-            )
-            input: ensureSupport((opts) ->
-                sanitizer.input = new Sanitize(opts) if opts
-            )
-
-
-        @strictPaste = ensureSupport((enable) ->
-            if enable
-                sanitizer.paste = new Sanitize({
-                    elements: ['div', 'span', 'b', 'i', 'u', 'br', 'p']
-                })
-            else
-                sanitizer.paste = defaultSanitize
-        )
-
-        # sanitize any html that goes into the editor
-        # by default only things you can enter in the editor are allowed (helps with xss / evil)
-        @enableSanitizer = ensureSupport((enable=true) ->
-            doSanitize = enable
-        )
+            setButtonDefaults: (obj) =>
+                @buttonDefaults = obj
+            getButtonDefaults: =>
+                return @buttonDefaults
+            isCopyStyles: =>
+                return @copyStyles
+            setCopyStyles: (yep) =>
+                @copyStyles = yep
+            setCustomStyles: (css) =>
+                @customStyles
+            getCustomStyles: =>
+                return @customStyles
 
         @$get = ->
             return obj
