@@ -1,6 +1,10 @@
 # angular-squire
 angularjs directive for the [squire rich text editor](https://github.com/neilj/Squire). 
 
+# important
+
+2.0.0 is the latest but you should use the 1.x.x release because all these docs go with that. thanks!
+
 Features:
 - a more functional ui than squire's example 
 - minimal look and feel
