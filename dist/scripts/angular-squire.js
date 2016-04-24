@@ -1,6 +1,6 @@
 /**
 * @preserve angular-squire - angularjs directive for squire rich text editor
-* @version v1.2.3
+* @version v2.1.0
 * @license MIT
 *
 * angular-squire includes squire-rte which is Copyright © by Neil Jenkins. MIT Licensed.
@@ -83,9 +83,8 @@
           };
         }],
         link: function(scope, element, attrs, ngModel) {
-          var HEADER_CLASS, IFRAME_CLASS, LINK_DEFAULT, editor, getLinkAtCursor, haveInteraction, iframe, iframeLoaded, menubar, themeClass, updateModel, updateStylesToMatch;
+          var HEADER_CLASS, LINK_DEFAULT, editor, getLinkAtCursor, haveInteraction, initialContent, menubar, themeClass, updateModel;
           LINK_DEFAULT = "http://";
-          IFRAME_CLASS = 'angular-squire-iframe';
           HEADER_CLASS = 'h4';
           themeClass = attrs.theme ? 'angular-squire-theme-' + attrs.theme : '';
           editor = scope.editor = null;
@@ -166,101 +165,72 @@
               left: -1 * (popover.width() / 2) + linkElement.width() / 2 + 2
             });
           };
-          updateStylesToMatch = function(doc) {
-            var customStyles, head;
-            head = doc.head;
-            if (squireService.isCopyStyles()) {
-              angular.element('link[rel="stylesheet"]').each(function() {
-                var a;
-                a = doc.createElement('link');
-                a.setAttribute('href', this.href);
-                a.setAttribute('type', 'text/css');
-                a.setAttribute('rel', 'stylesheet');
-                return head.appendChild(a);
-              });
-            }
-            customStyles = "<style id='angular-squire-styles'>" + squireService.getCustomStyles() + "</style>";
-            if (customStyles) {
-              head.insertAdjacentHTML('beforeend', customStyles);
-            }
-            doc.childNodes[0].className = IFRAME_CLASS + " " + themeClass;
-            if (scope.editorClass) {
-              return doc.childNodes[0].className += scope.editorClass;
-            }
-          };
-          iframe = angular.element('<iframe frameborder="0" border="0" marginwidth="0" marginheight="0" src="about:blank"></iframe>');
           menubar = element.find('.menu');
           haveInteraction = false;
-          iframeLoaded = function() {
-            var iframeDoc, initialContent;
-            iframeDoc = iframe[0].contentWindow.document;
-            updateStylesToMatch(iframeDoc);
-            ngModel.$setPristine();
-            editor = scope.editor = new SQ(iframeDoc);
-            editor.defaultBlockTag = 'P';
-            initialContent = scope.body || ngModel.$viewValue;
-            if (initialContent) {
-              editor.setHTML(initialContent);
-              updateModel(initialContent);
-              haveInteraction = true;
+          ngModel.$setPristine();
+          editor = scope.editor = new SQ(element.find('.angular-squire-wrapper')[0], {
+            blockTag: 'P'
+          });
+          initialContent = scope.body || ngModel.$viewValue;
+          if (initialContent) {
+            editor.setHTML(initialContent);
+            updateModel(initialContent);
+            haveInteraction = true;
+          }
+          element.addClass(themeClass);
+          editor.addEventListener("input", function() {
+            var html;
+            if (haveInteraction) {
+              html = editor.getHTML();
+              return updateModel(html);
             }
-            element.addClass(themeClass);
-            editor.addEventListener("input", function() {
-              var html;
-              if (haveInteraction) {
-                html = editor.getHTML();
-                return updateModel(html);
-              }
-            });
-            editor.addEventListener("focus", function() {
-              element.addClass('focus').triggerHandler('focus');
-              scope.editorVisibility(true);
-              return haveInteraction = true;
-            });
-            editor.addEventListener("blur", function() {
-              element.removeClass('focus').triggerHandler('blur');
-              if (ngModel.$pristine && !ngModel.$isEmpty(ngModel.$viewValue)) {
-                ngModel.$setTouched();
-              }
-              return haveInteraction = true;
-            });
-            editor.addEventListener("pathChange", function() {
-              var p, ref;
-              p = editor.getPath();
-              if (/>A\b/.test(p) || editor.hasFormat('A')) {
-                element.find('.add-link').addClass('active');
-              } else {
-                element.find('.add-link').removeClass('active');
-              }
-              return menubar.attr("class", "menu " + ((ref = p.split("BODY")[1]) != null ? ref.replace(/>|\.|html|body|div/ig, ' ').replace(RegExp(HEADER_CLASS, 'g'), 'size').toLowerCase() : void 0));
-            });
-            editor.alignRight = function() {
-              return editor.setTextAlignment("right");
-            };
-            editor.alignCenter = function() {
-              return editor.setTextAlignment("center");
-            };
-            editor.alignLeft = function() {
-              return editor.setTextAlignment("left");
-            };
-            editor.alignJustify = function() {
-              return editor.setTextAlignment("justify");
-            };
-            return editor.makeHeading = function() {
-              var create;
-              create = !menubar.hasClass('size');
-              editor.forEachBlock(function(block) {
-                if (create) {
-                  return angular.element(block).addClass(HEADER_CLASS);
-                } else {
-                  return angular.element(block).removeClass(HEADER_CLASS);
-                }
-              }, true);
-              return editor.focus();
-            };
+          });
+          editor.addEventListener("focus", function() {
+            element.addClass('focus').triggerHandler('focus');
+            scope.editorVisibility(true);
+            return haveInteraction = true;
+          });
+          editor.addEventListener("blur", function() {
+            element.removeClass('focus').triggerHandler('blur');
+            if (ngModel.$pristine && !ngModel.$isEmpty(ngModel.$viewValue)) {
+              ngModel.$setTouched();
+            }
+            return haveInteraction = true;
+          });
+          editor.addEventListener("pathChange", function() {
+            var p;
+            p = editor.getPath();
+            if (/>A\b/.test(p) || editor.hasFormat('A')) {
+              element.find('.add-link').addClass('active');
+            } else {
+              element.find('.add-link').removeClass('active');
+            }
+            return menubar.attr("class", "menu " + p.replace(/>|\.|div/ig, ' ').replace(RegExp(HEADER_CLASS, 'g'), 'size').toLowerCase());
+          });
+          editor.alignRight = function() {
+            return editor.setTextAlignment("right");
           };
-          iframe.on('load', iframeLoaded);
-          element.find('.angular-squire-wrapper').append(iframe);
+          editor.alignCenter = function() {
+            return editor.setTextAlignment("center");
+          };
+          editor.alignLeft = function() {
+            return editor.setTextAlignment("left");
+          };
+          editor.alignJustify = function() {
+            return editor.setTextAlignment("justify");
+          };
+          editor.makeHeading = function() {
+            var create;
+            create = !menubar.hasClass('size');
+            editor.forEachBlock(function(block) {
+              if (create) {
+                return angular.element(block).addClass(HEADER_CLASS);
+              } else {
+                return angular.element(block).removeClass(HEADER_CLASS);
+              }
+            }, true);
+            return editor.focus();
+          };
           SQ.prototype.testPresenceinSelection = function(name, action, format, validation) {
             var p, test;
             p = this.getPath();
@@ -316,9 +286,9 @@
               }
               node = angular.element(editor.getSelection().commonAncestorContainer).closest('a')[0];
               if (node) {
-                range = iframe[0].contentWindow.document.createRange();
+                range = document.createRange();
                 range.selectNodeContents(node);
-                selection = iframe[0].contentWindow.getSelection();
+                selection = window.getSelection();
                 selection.removeAllRanges();
                 selection.addRange(range);
               }
@@ -399,8 +369,6 @@
         undo: false,
         redo: false
       };
-      this.copyStyles = false;
-      this.customStyles = 'body {background-color: transparent}';
       obj = {
         setButtonDefaults: (function(_this) {
           return function(obj) {
@@ -410,26 +378,6 @@
         getButtonDefaults: (function(_this) {
           return function() {
             return _this.buttonDefaults;
-          };
-        })(this),
-        isCopyStyles: (function(_this) {
-          return function() {
-            return _this.copyStyles;
-          };
-        })(this),
-        setCopyStyles: (function(_this) {
-          return function(yep) {
-            return _this.copyStyles = yep;
-          };
-        })(this),
-        setCustomStyles: (function(_this) {
-          return function(css) {
-            return _this.customStyles;
-          };
-        })(this),
-        getCustomStyles: (function(_this) {
-          return function() {
-            return _this.customStyles;
           };
         })(this)
       };
@@ -442,4 +390,4 @@
 
 }).call(this);
 
-angular.module("angular-squire").run(["$templateCache", function($templateCache) {$templateCache.put("/modules/angular-squire/editor.html","<div class=\'angular-squire\'>\n    <div ng-class=\"{\'editor-hide\': !isEditorVisible()}\" class=\'editor-container\'>\n        <div class=\"menu\">\n            <div title=\'Bold\'\n                 ng-click=\"action(\'bold\')\"\n                 ng-show=\"buttonVis.bold\"\n                 class=\"item bold\" ng-include=\"\'angular-squire-icon-bold\'\">\n            </div>\n            <div title=\'Italic\'\n                 ng-click=\"action(\'italic\')\"\n                 ng-show=\"buttonVis.italic\"\n                 class=\"item italic\"\n                 ng-include=\"\'angular-squire-icon-italic\'\">\n            </div>\n            <div title=\'Underline\'\n                 ng-click=\"action(\'underline\')\"\n                 ng-show=\"buttonVis.underline\"\n                 class=\"item underline\"\n                 ng-include=\"\'angular-squire-icon-underline\'\">\n            </div>\n            <div title=\'Insert Numbered List\'\n                 ng-click=\"action(\'makeOrderedList\')\"\n                 ng-show=\"buttonVis.ol\"\n                 class=\"item olist\"\n                 ng-include=\"\'angular-squire-icon-ol\'\">\n            </div>\n            <div title=\'Insert List\'\n                 ng-click=\"action(\'makeUnorderedList\')\"\n                 ng-show=\"buttonVis.ul\"\n                 class=\"item ulist\"\n                 ng-include=\"\'angular-squire-icon-ul\'\">\n            </div>\n            <div title=\'Quote\'\n                 ng-click=\"action(\'increaseQuoteLevel\')\"\n                 ng-show=\"buttonVis.quote\"\n                 class=\"item quote\">\n                <i class=\"fa fa-quote-right\"></i>\n            </div>\n            <div title=\'Insert Link\'\n                 class=\"item add-link\"\n                 ng-show=\"buttonVis.link\"\n                 ng-click=\"popoverShow($event)\">\n                <span ng-include=\"\'angular-squire-icon-attachment\'\"></span>\n                <div class=\"squire-popover\">\n                    <svg class=\"squire-arrow\">\n                        <polygon points=\"0,15 15,0 30,15\"/>\n                    </svg>\n                    <div class=\"content\">\n                        <div class=\"title\">Insert Link</div>\n                        <input type=\"text\"\n                               id=\"edit-link\"\n                               placeholder=\"Link URL\"\n                               ng-model=\"data.link\"\n                               ng-keydown=\"popoverHide($event, \'makeLink\')\" />\n                        <button type=\"button\" class=\"double r\" ng-show=\"canRemoveLink()\"\n                                ng-click=\"popoverHide($event, \'removeLink\')\">\n                            <span class=\"fa fa-remove\"></span> Remove Link\n                        </button>\n                        <button type=\"button\" class=\"double l\" ng-show=\"canRemoveLink()\"\n                                ng-class=\"{disabled: !canAddLink()}\"\n                                ng-click=\"popoverHide($event, \'makeLink\')\">\n                            <span class=\"fa fa-edit\"></span> Update Link\n                        </button>\n                        <button type=\"button\" ng-hide=\"canRemoveLink()\"\n                                ng-class=\"{disabled: !canAddLink()}\"\n                                ng-click=\"popoverHide($event, \'makeLink\')\">\n                            <span class=\"fa fa-plus\"></span> Insert Link\n                        </button>\n                    </div>\n                    <div class=\"squire-popover-overlay\" ng-click=\"popoverHide($event, \'makeLink\')\"></div>\n                </div>\n            </div>\n            <div title=\'Header\'\n                 ng-click=\"action(\'makeHeading\')\"\n                 ng-show=\"buttonVis.header\"\n                 class=\"item header\">\n                <i class=\"fa fa-header\"></i>\n            </div>\n            <div title=\'Align Left\'\n                 ng-click=\"action(\'alignLeft\')\"\n                 ng-show=\"buttonVis.alignLeft\"\n                 class=\"item aleft\">\n                <i class=\"fa fa-align-left\"></i>\n            </div>\n            <div title=\'Align Center\'\n                 ng-click=\"action(\'alignCenter\')\"\n                 ng-show=\"buttonVis.alignCenter\"\n                 class=\"item acenter\">\n                <i class=\"fa fa-align-center\"></i>\n            </div>\n            <div title=\'Align Right\'\n                 ng-click=\"action(\'alignRight\')\"\n                 ng-show=\"buttonVis.alignRight\"\n                 class=\"item aright\">\n                <i class=\"fa fa-align-right\"></i>\n            </div>\n            <div title=\'Undo\'\n                 ng-click=\"action(\'undo\')\"\n                 ng-show=\"buttonVis.undo\"\n                 class=\"item\">\n                <i class=\"fa fa-undo\"></i>\n            </div>\n            <div title=\'Redo\'\n                 ng-click=\"action(\'redo\')\"\n                 ng-show=\"buttonVis.redo\"\n                 class=\"item\">\n                <i class=\"fa fa-repeat\"></i>\n            </div>\n        </div>\n\n        <div class=\'angular-squire-wrapper\' ng-style=\'{width: width, height: height}\'>\n            <div class=\'placeholder\'>\n                <div ng-show=\'showPlaceholder()\'>{{ placeholder }}</div>\n            </div>\n        </div>\n    </div>\n    <ng-transclude></ng-transclude>\n</div>\n");}]);
+angular.module("angular-squire").run(["$templateCache", function($templateCache) {$templateCache.put("/modules/angular-squire/editor.html","<div class=\'angular-squire\'>\n    <div ng-class=\"{\'editor-hide\': !isEditorVisible()}\" class=\'editor-container\'>\n        <div class=\"menu\">\n            <div title=\'Bold\'\n                 ng-click=\"action(\'bold\')\"\n                 ng-show=\"buttonVis.bold\"\n                 class=\"item bold\" ng-include=\"\'angular-squire-icon-bold\'\">\n            </div>\n            <div title=\'Italic\'\n                 ng-click=\"action(\'italic\')\"\n                 ng-show=\"buttonVis.italic\"\n                 class=\"item italic\"\n                 ng-include=\"\'angular-squire-icon-italic\'\">\n            </div>\n            <div title=\'Underline\'\n                 ng-click=\"action(\'underline\')\"\n                 ng-show=\"buttonVis.underline\"\n                 class=\"item underline\"\n                 ng-include=\"\'angular-squire-icon-underline\'\">\n            </div>\n            <div title=\'Insert Numbered List\'\n                 ng-click=\"action(\'makeOrderedList\')\"\n                 ng-show=\"buttonVis.ol\"\n                 class=\"item olist\"\n                 ng-include=\"\'angular-squire-icon-ol\'\">\n            </div>\n            <div title=\'Insert List\'\n                 ng-click=\"action(\'makeUnorderedList\')\"\n                 ng-show=\"buttonVis.ul\"\n                 class=\"item ulist\"\n                 ng-include=\"\'angular-squire-icon-ul\'\">\n            </div>\n            <div title=\'Quote\'\n                 ng-click=\"action(\'increaseQuoteLevel\')\"\n                 ng-show=\"buttonVis.quote\"\n                 class=\"item quote\">\n                <i class=\"fa fa-quote-right\"></i>\n            </div>\n            <div title=\'Insert Link\'\n                 class=\"item add-link\"\n                 ng-show=\"buttonVis.link\"\n                 ng-click=\"popoverShow($event)\">\n                <span ng-include=\"\'angular-squire-icon-attachment\'\"></span>\n                <div class=\"squire-popover\">\n                    <svg class=\"squire-arrow\">\n                        <polygon points=\"0,15 15,0 30,15\"/>\n                    </svg>\n                    <div class=\"content\">\n                        <div class=\"title\">Insert Link</div>\n                        <input type=\"text\"\n                               id=\"edit-link\"\n                               placeholder=\"Link URL\"\n                               ng-model=\"data.link\"\n                               ng-keydown=\"popoverHide($event, \'makeLink\')\" />\n                        <div class=\"button-row\">\n                            <button type=\"button\" class=\"double r\" ng-show=\"canRemoveLink()\"\n                                    ng-click=\"popoverHide($event, \'removeLink\')\">\n                                <span class=\"fa fa-remove\"></span> Remove Link\n                            </button>\n                            <button type=\"button\" class=\"double l\" ng-show=\"canRemoveLink()\"\n                                    ng-class=\"{disabled: !canAddLink()}\"\n                                    ng-click=\"popoverHide($event, \'makeLink\')\">\n                                <span class=\"fa fa-edit\"></span> Update Link\n                            </button>\n                            <button type=\"button\" ng-hide=\"canRemoveLink()\"\n                                    ng-class=\"{disabled: !canAddLink()}\"\n                                    ng-click=\"popoverHide($event, \'makeLink\')\">\n                                <span class=\"fa fa-plus\"></span> Insert Link\n                            </button>\n                        </div>\n                    </div>\n                    <div class=\"squire-popover-overlay\" ng-click=\"popoverHide($event, \'makeLink\')\"></div>\n                </div>\n            </div>\n            <div title=\'Header\'\n                 ng-click=\"action(\'makeHeading\')\"\n                 ng-show=\"buttonVis.header\"\n                 class=\"item header\">\n                <i class=\"fa fa-header\"></i>\n            </div>\n            <div title=\'Align Left\'\n                 ng-click=\"action(\'alignLeft\')\"\n                 ng-show=\"buttonVis.alignLeft\"\n                 class=\"item aleft\">\n                <i class=\"fa fa-align-left\"></i>\n            </div>\n            <div title=\'Align Center\'\n                 ng-click=\"action(\'alignCenter\')\"\n                 ng-show=\"buttonVis.alignCenter\"\n                 class=\"item acenter\">\n                <i class=\"fa fa-align-center\"></i>\n            </div>\n            <div title=\'Align Right\'\n                 ng-click=\"action(\'alignRight\')\"\n                 ng-show=\"buttonVis.alignRight\"\n                 class=\"item aright\">\n                <i class=\"fa fa-align-right\"></i>\n            </div>\n            <div title=\'Undo\'\n                 ng-click=\"action(\'undo\')\"\n                 ng-show=\"buttonVis.undo\"\n                 class=\"item\">\n                <i class=\"fa fa-undo\"></i>\n            </div>\n            <div title=\'Redo\'\n                 ng-click=\"action(\'redo\')\"\n                 ng-show=\"buttonVis.redo\"\n                 class=\"item\">\n                <i class=\"fa fa-repeat\"></i>\n            </div>\n        </div>\n\n        <div class=\'angular-squire-wrapper\' ng-style=\'{width: width, height: height}\'>\n            <div class=\'placeholder\'>\n                <div ng-show=\'showPlaceholder()\'>{{ placeholder }}</div>\n            </div>\n        </div>\n    </div>\n    <ng-transclude></ng-transclude>\n</div>\n");}]);

@@ -49,7 +49,6 @@ if typeof SQ != "function"
 
             link: (scope, element, attrs, ngModel) ->
                 LINK_DEFAULT = "http://"
-                IFRAME_CLASS = 'angular-squire-iframe'
 
                 HEADER_CLASS = 'h4'
 
@@ -130,100 +129,76 @@ if typeof SQ != "function"
                     popover.css(left: -1 * (popover.width() / 2) + linkElement.width() / 2  + 2)
                     return
 
-                updateStylesToMatch = (doc) ->
-                    head = doc.head
 
-                    if squireService.isCopyStyles()
-                        angular.element('link[rel="stylesheet"]').each(() ->
-                            a = doc.createElement('link')
-                            a.setAttribute('href',  this.href)
-                            a.setAttribute('type',  'text/css')
-                            a.setAttribute('rel',  'stylesheet')
-                            head.appendChild(a)
-                        )
-                    customStyles = "<style id='angular-squire-styles'>"+squireService.getCustomStyles()+"</style>";
-                    if customStyles
-                        head.insertAdjacentHTML('beforeend', customStyles)
-
-                    doc.childNodes[0].className = IFRAME_CLASS + " " + themeClass
-                    if scope.editorClass
-                        doc.childNodes[0].className += scope.editorClass
-
-
-                iframe = angular.element('<iframe frameborder="0" border="0" marginwidth="0"
-                                            marginheight="0" src="about:blank"></iframe>')
                 menubar = element.find('.menu')
                 haveInteraction = false
 
-                iframeLoaded = ->
-                    iframeDoc = iframe[0].contentWindow.document
-                    updateStylesToMatch(iframeDoc)
-                    ngModel.$setPristine()
 
-                    editor = scope.editor = new SQ(iframeDoc)
-                    editor.defaultBlockTag = 'P'
+                ngModel.$setPristine()
 
-                    initialContent = scope.body || ngModel.$viewValue
+                editor = scope.editor = new SQ(element.find('.angular-squire-wrapper')[0], {
+                    blockTag: 'P'
+                })
 
-                    if initialContent
-                        editor.setHTML(initialContent)
-                        updateModel(initialContent)
-                        haveInteraction = true
+                initialContent = scope.body || ngModel.$viewValue
 
+                if initialContent
+                    editor.setHTML(initialContent)
+                    updateModel(initialContent)
+                    haveInteraction = true
 
 
-                    element.addClass(themeClass)
+
+                element.addClass(themeClass)
 
 
-                    editor.addEventListener("input", ->
-                        if haveInteraction
-                            html = editor.getHTML()
-                            updateModel(html)
-                    )
+                editor.addEventListener("input", ->
+                    if haveInteraction
+                        html = editor.getHTML()
+                        updateModel(html)
+                )
 
-                    editor.addEventListener("focus", ->
-                        element.addClass('focus').triggerHandler('focus')
-                        scope.editorVisibility(true)
-                        haveInteraction = true
-                    )
-                    editor.addEventListener("blur", ->
-                        element.removeClass('focus').triggerHandler('blur')
-                        if ngModel.$pristine and not ngModel.$isEmpty(ngModel.$viewValue)
-                            ngModel.$setTouched()
-                        haveInteraction = true
-                    )
-                    editor.addEventListener("pathChange", ->
-                        p = editor.getPath()
-                        if />A\b/.test(p) or editor.hasFormat('A')
-                            element.find('.add-link').addClass('active')
+                editor.addEventListener("focus", ->
+                    element.addClass('focus').triggerHandler('focus')
+                    scope.editorVisibility(true)
+                    haveInteraction = true
+                )
+                editor.addEventListener("blur", ->
+                    element.removeClass('focus').triggerHandler('blur')
+                    if ngModel.$pristine and not ngModel.$isEmpty(ngModel.$viewValue)
+                        ngModel.$setTouched()
+                    haveInteraction = true
+                )
+                editor.addEventListener("pathChange", ->
+
+                    p = editor.getPath()
+
+                    if />A\b/.test(p) or editor.hasFormat('A')
+                        element.find('.add-link').addClass('active')
+                    else
+                        element.find('.add-link').removeClass('active')
+
+                    menubar.attr("class", "menu "+
+                        p.replace(/>|\.|div/ig, ' ')
+                        .replace(RegExp(HEADER_CLASS, 'g'), 'size')
+                        .toLowerCase())
+                )
+
+                #gimme some shortcuts
+                editor.alignRight = -> editor.setTextAlignment("right")
+                editor.alignCenter = -> editor.setTextAlignment("center")
+                editor.alignLeft = -> editor.setTextAlignment("left")
+                editor.alignJustify = -> editor.setTextAlignment("justify")
+
+                editor.makeHeading = () ->
+                    create = not menubar.hasClass('size')
+                    editor.forEachBlock((block) ->
+                        if create
+                            angular.element(block).addClass(HEADER_CLASS)
                         else
-                            element.find('.add-link').removeClass('active')
-
-                        menubar.attr("class", "menu "+
-                            p.split("BODY")[1]?.replace(/>|\.|html|body|div/ig, ' ')
-                            .replace(RegExp(HEADER_CLASS, 'g'), 'size')
-                            .toLowerCase())
-                    )
-
-                    #gimme some shortcuts
-                    editor.alignRight = -> editor.setTextAlignment("right")
-                    editor.alignCenter = -> editor.setTextAlignment("center")
-                    editor.alignLeft = -> editor.setTextAlignment("left")
-                    editor.alignJustify = -> editor.setTextAlignment("justify")
-
-                    editor.makeHeading = () ->
-                        create = not menubar.hasClass('size')
-                        editor.forEachBlock((block) ->
-                            if create
-                                angular.element(block).addClass(HEADER_CLASS)
-                            else
-                                angular.element(block).removeClass(HEADER_CLASS)
-                        , true)
-                        return editor.focus()
-
-                iframe.on('load', iframeLoaded)
-                element.find('.angular-squire-wrapper').append(iframe)
-
+                            angular.element(block).removeClass(HEADER_CLASS)
+                    , true)
+                    return editor.focus()
 
                 SQ::testPresenceinSelection = (name, action, format, validation) ->
                     p = @getPath()
@@ -273,9 +248,9 @@ if typeof SQ != "function"
                         node = angular.element(editor.getSelection().commonAncestorContainer)
                             .closest('a')[0]
                         if node
-                            range = iframe[0].contentWindow.document.createRange()
+                            range = document.createRange()
                             range.selectNodeContents(node)
-                            selection = iframe[0].contentWindow.getSelection()
+                            selection = window.getSelection()
                             selection.removeAllRanges()
                             selection.addRange(range)
                         if scope.data.link.match(/^\s*?javascript:/i)
@@ -351,22 +326,11 @@ if typeof SQ != "function"
             undo: false
             redo: false
 
-        @copyStyles = false
-        @customStyles = 'body {background-color: transparent}';
-
         obj =
             setButtonDefaults: (obj) =>
                 @buttonDefaults = obj
             getButtonDefaults: =>
                 return @buttonDefaults
-            isCopyStyles: =>
-                return @copyStyles
-            setCopyStyles: (yep) =>
-                @copyStyles = yep
-            setCustomStyles: (css) =>
-                @customStyles
-            getCustomStyles: =>
-                return @customStyles
 
         @$get = ->
             return obj
