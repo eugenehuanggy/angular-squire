@@ -139,7 +139,8 @@
             };
             if (e.keyCode) {
               if (e.keyCode === 13) {
-                return hide();
+                hide();
+                return e.preventDefault();
               }
             } else {
               return hide();

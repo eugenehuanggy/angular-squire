@@ -107,7 +107,9 @@ if typeof SQ != "function"
                         scope.action(name)
 
                     if e.keyCode
-                        hide() if e.keyCode == 13
+                        if e.keyCode == 13
+                            hide()
+                            e.preventDefault()
                     else
                         hide()
 
