@@ -20,8 +20,6 @@ bower install angular-squire --save
 npm install angular-squire --save
 ```
 
-
-
 or include the following in your code:
 
 ```bash
