@@ -1,6 +1,6 @@
 /**
 * @preserve angular-squire - angularjs directive for squire rich text editor
-* @version v2.1.0
+* @version v2.1.1
 * @license MIT
 *
 * angular-squire includes squire-rte which is Copyright © by Neil Jenkins. MIT Licensed.

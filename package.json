@@ -10,9 +10,9 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com:HourlyNerd/angular-squire.git"
+    "url": "git@github.com:Catalant/angular-squire.git"
   },
-  "author": "HourlyNerd Inc",
+  "author": "Catalant Technologies, Inc",
   "license": "MIT",
   "devDependencies": {
     "coffee-script": "^1.8.0",
