@@ -1,9 +1,9 @@
 {
   "name": "angular-squire",
-  "version": "2.0.0",
-  "homepage": "https://github.com/HourlyNerd/angular-squire",
+  "version": "2.2.0",
+  "homepage": "https://github.com/Catalant/angular-squire",
   "authors": [
-    "HourlyNerd Inc"
+    "Catalant Technologies, Inc"
   ],
   "main": [
     "dist/css/angular-squire.css",

@@ -152,34 +152,40 @@ $angular-squire-body-font-size: 14px !default;
     }
 
     .menu {
+        border-bottom: 1px solid $angular-squire-border-color;
+        display: block;
+        height: 30px;
+        margin: 0;
+        padding: 5px 14px;
         -webkit-touch-callout: none;
         user-select: none;
-        padding: 5px 14px;
-        height: 30px;
-        border-bottom: 1px solid $angular-squire-border-color;
-    }
-    .menu .item {
-        position: relative;
-        display: inline-block;
-        line-height: 0;
-        border-radius: 3px;
-        outline: none;
 
-        padding: 2px;
-        margin-right: 8px;
+        .item {
+            border-radius: 3px;
+            display: inline-block;
+            line-height: 0;
+            margin-bottom: 0;
+            margin-right: 8px;
+            outline: none;
+            padding: 2px;
+            position: relative;
+            width: auto;
 
-        svg  {
-            width: 14px;
-            height: 14px;
-            g {
-                fill: $angular-squire-svg-base-color;
+            svg {
+                height: 14px;
+                width: 14px;
+
+                g {
+                    fill: $angular-squire-svg-base-color;
+                }
+            }
+
+            &:hover {
+                @extend .hl;
             }
         }
-
-        &:hover {
-            @extend .hl;
-        }
     }
+
     .item.underline, .item.ulist {
         margin-right: 20px;
         &:after {
