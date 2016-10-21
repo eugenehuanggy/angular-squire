@@ -23,6 +23,8 @@ if typeof SQ != "function"
                 editorClass: '@'
                 buttons: '@'
                 theme: '=' # currently only supports 'dark' or not setting it
+                chromeOnHoverAndFocus: '@' # If true, only show squire toolbar and border on focus and hover
+                heightWrapContent: '@' # Overrides the height settings and makes editor wrap contents
             replace: true
             transclude: true
             templateUrl: "/modules/angular-squire/editor.html"
