@@ -25,6 +25,30 @@ $angular-squire-body-font-size: 14px !default;
 .angular-squire {
     transition: transition(all 2s);
     outline: none;
+    $transition-duration: 250ms;
+    &.angular-squire-wrap-contents, &.angular-squire-wrap-contents .angular-squire-wrapper {
+        max-height: none;
+        min-height: 100px;
+    }
+
+    &.angular-squire-chrome-on-focus {
+        transition: border-color $transition-duration;
+        svg { transition: opacity $transition-duration;}
+        div::after { transition: background-color $transition-duration;}
+        div {
+            transition: border-color $transition-duration;
+        }
+    }
+
+    &.angular-squire-chrome-on-focus:not(.focus):not(:hover) {
+        border-color: transparent;
+        svg { opacity: 0;}
+        div::after { background-color: transparent !important;}
+        div {
+            border-color: transparent;
+            background-color: transparent !important;
+        }
+    }
 
     border: 1px solid $angular-squire-border-color;
 
