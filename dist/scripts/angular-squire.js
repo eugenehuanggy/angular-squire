@@ -1,6 +1,6 @@
 /**
 * @preserve angular-squire - angularjs directive for squire rich text editor
-* @version v2.2.1
+* @version v2.3.0
 * @license MIT
 *
 * angular-squire includes squire-rte which is Copyright © by Neil Jenkins. MIT Licensed.
@@ -24,7 +24,7 @@
 }).call(this);
 
 (function() {
-  var SQ, canRequire;
+  var SQ, canRequire, closest, fakeEl, matches;
 
   canRequire = (typeof module !== "undefined" && module !== null) && module.exports;
 
@@ -38,6 +38,20 @@
   if (typeof SQ !== "function") {
     throw new Error("angular-squire requires squire-rte script to be loaded before it." + "Get it from https://github.com/neilj/Squire");
   }
+
+  matches = window.Element.prototype.matches || window.Element.prototype.webkitMatchesSelector || window.Element.prototype.mozMatchesSelector || window.Element.prototype.msMatchesSelector || window.Element.prototype.oMatchesSelector;
+
+  fakeEl = angular.element();
+
+  closest = function(el, selector) {
+    if (el[0].nodeName === "HTML" || el[0].nodeType === 3) {
+      return fakeEl;
+    } else if (matches.apply(el[0], [selector])) {
+      return el;
+    } else {
+      return closest(el.parent(), selector);
+    }
+  };
 
   (canRequire ? require('angular') : window.angular).module("angular-squire", []).directive("squire", [
     'squireService', function(squireService) {
@@ -117,7 +131,7 @@
             if (!editor) {
               return LINK_DEFAULT;
             }
-            return angular.element(editor.getSelection().commonAncestorContainer).closest("a").attr("href");
+            return closest(angular.element(editor.getSelection().commonAncestorContainer), "a").attr("href");
           };
           scope.canRemoveLink = function() {
             var href;
@@ -136,7 +150,7 @@
           scope.popoverHide = function(e, name) {
             var hide;
             hide = function() {
-              angular.element(e.target).closest(".popover-visible").removeClass("popover-visible");
+              closest(angular.element(e.target), ".popover-visible").removeClass("popover-visible");
               return scope.action(name);
             };
             if (e.keyCode) {
@@ -151,7 +165,7 @@
           scope.popoverShow = function(e) {
             var linkElement, popover;
             linkElement = angular.element(e.currentTarget);
-            if (angular.element(e.target).closest(".squire-popover").length) {
+            if (closest(angular.element(e.target), ".squire-popover").length) {
               return;
             }
             if (linkElement.hasClass("popover-visible")) {
@@ -163,15 +177,15 @@
             } else {
               scope.data.link = LINK_DEFAULT;
             }
-            popover = element.find(".squire-popover").find("input").focus().end();
+            popover = angular.element(element[0].querySelector(".squire-popover input")).focus();
             popover.css({
               left: -1 * (popover.width() / 2) + linkElement.width() / 2 + 2
             });
           };
-          menubar = element.find('.menu');
+          menubar = angular.element(element[0].querySelector('.menu'));
           haveInteraction = false;
           ngModel.$setPristine();
-          editor = scope.editor = new SQ(element.find('.angular-squire-wrapper')[0], {
+          editor = scope.editor = new SQ(element[0].querySelector('.angular-squire-wrapper'), {
             blockTag: 'P'
           });
           initialContent = scope.body || ngModel.$viewValue;
@@ -204,9 +218,9 @@
             var p;
             p = editor.getPath();
             if (/>A\b/.test(p) || editor.hasFormat('A')) {
-              element.find('.add-link').addClass('active');
+              angular.element(element[0].querySelector('.add-link')).addClass('active');
             } else {
-              element.find('.add-link').removeClass('active');
+              angular.element(element[0].querySelector('.add-link')).removeClass('active');
             }
             return menubar.attr("class", "menu " + p.replace(/>|\.|div/ig, ' ').replace(RegExp(HEADER_CLASS, 'g'), 'size').toLowerCase());
           });
@@ -287,7 +301,7 @@
               if (!scope.canAddLink()) {
                 return;
               }
-              node = angular.element(editor.getSelection().commonAncestorContainer).closest('a')[0];
+              node = closest(angular.element(editor.getSelection().commonAncestorContainer), "a")[0];
               if (node) {
                 range = document.createRange();
                 range.selectNodeContents(node);

@@ -9,6 +9,24 @@ if typeof SQ != "function"
     throw new Error("angular-squire requires squire-rte script to be loaded before it." +
             "Get it from https://github.com/neilj/Squire")
 
+matches = window.Element.prototype.matches ||
+    window.Element.prototype.webkitMatchesSelector ||
+    window.Element.prototype.mozMatchesSelector ||
+    window.Element.prototype.msMatchesSelector ||
+    window.Element.prototype.oMatchesSelector
+
+fakeEl = angular.element()
+
+closest = (el, selector) ->
+    if el[0].nodeName == "HTML" or el[0].nodeType == 3
+        return fakeEl
+    else if matches.apply(el[0], [selector])
+        return el
+    else
+        return closest(el.parent(), selector)
+
+
+
 (if canRequire then require('angular') else window.angular)
     .module("angular-squire", [])
     .directive("squire", ['squireService', (squireService) ->
@@ -81,9 +99,8 @@ if typeof SQ != "function"
 
                 getLinkAtCursor = ->
                     return LINK_DEFAULT if not editor
-                    return angular.element(editor.getSelection()
-                        .commonAncestorContainer)
-                        .closest("a")
+                    return closest(angular.element(editor.getSelection()
+                        .commonAncestorContainer), "a")
                         .attr("href")
 
                 scope.canRemoveLink = ->
@@ -102,8 +119,7 @@ if typeof SQ != "function"
 
                 scope.popoverHide = (e, name) ->
                     hide = ->
-                        angular.element(e.target)
-                            .closest(".popover-visible")
+                        closest(angular.element(e.target), ".popover-visible")
                             .removeClass("popover-visible")
 
                         scope.action(name)
@@ -119,7 +135,7 @@ if typeof SQ != "function"
                 scope.popoverShow = (e) ->
                     linkElement = angular.element(e.currentTarget)
 
-                    if angular.element(e.target).closest(".squire-popover").length
+                    if closest(angular.element(e.target), ".squire-popover").length
                         return
                     if linkElement.hasClass("popover-visible")
                         return
@@ -129,18 +145,18 @@ if typeof SQ != "function"
                         scope.data.link = getLinkAtCursor()
                     else
                         scope.data.link = LINK_DEFAULT
-                    popover = element.find(".squire-popover").find("input").focus().end()
+                    popover = angular.element(element[0].querySelector(".squire-popover input")).focus()
                     popover.css(left: -1 * (popover.width() / 2) + linkElement.width() / 2  + 2)
                     return
 
 
-                menubar = element.find('.menu')
+                menubar = angular.element(element[0].querySelector('.menu'))
                 haveInteraction = false
 
 
                 ngModel.$setPristine()
 
-                editor = scope.editor = new SQ(element.find('.angular-squire-wrapper')[0], {
+                editor = scope.editor = new SQ(element[0].querySelector('.angular-squire-wrapper'), {
                     blockTag: 'P'
                 })
 
@@ -178,9 +194,9 @@ if typeof SQ != "function"
                     p = editor.getPath()
 
                     if />A\b/.test(p) or editor.hasFormat('A')
-                        element.find('.add-link').addClass('active')
+                        angular.element(element[0].querySelector('.add-link')).addClass('active')
                     else
-                        element.find('.add-link').removeClass('active')
+                        angular.element(element[0].querySelector('.add-link')).removeClass('active')
 
                     menubar.attr("class", "menu "+
                         p.replace(/>|\.|div/ig, ' ')
@@ -249,8 +265,7 @@ if typeof SQ != "function"
                         # these will trigger popover, dont do anything
                     else if action == 'makeLink'
                         return unless scope.canAddLink()
-                        node = angular.element(editor.getSelection().commonAncestorContainer)
-                            .closest('a')[0]
+                        node = closest(angular.element(editor.getSelection().commonAncestorContainer), "a")[0]
                         if node
                             range = document.createRange()
                             range.selectNodeContents(node)
@@ -261,7 +276,7 @@ if typeof SQ != "function"
                             linky = LINK_DEFAULT
                         else
                             linky = scope.data.link
-                            
+
                         editor.makeLink(linky, {
                             target: '_blank',
                             title: linky,

@@ -23,8 +23,7 @@
   ],
   "dependencies": {
     "angular": "~1.3.8",
-    "jquery": ">= 1.9.0",
-    "squire-rte": "git://github.com/neilj/Squire.git#e3d0576a386acd5471dd4416df752b72962fdc11"
+    "squire-rte": "1.6.4"
   },
   "devDependencies": {},
   "overrides": {
