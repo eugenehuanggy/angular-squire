@@ -24,15 +24,22 @@
 }).call(this);
 
 (function() {
-  var SQ, canRequire, closest, fakeEl, matches;
+  var DOMPurify, SQ, canRequire, closest, fakeEl, matches,
+    indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
   canRequire = (typeof module !== "undefined" && module !== null) && module.exports;
 
   if (canRequire) {
     SQ = require('squire-rte');
+    try {
+      DOMPurify = require('dompurify');
+    } catch (error) {
+      DOMPurify = null;
+    }
     module.exports = 'angular-squire';
   } else {
     SQ = window.Squire;
+    DOMPurify = window.DOMPurify || null;
   }
 
   if (typeof SQ !== "function") {
@@ -44,8 +51,10 @@
   fakeEl = angular.element();
 
   closest = function(el, selector) {
-    if (el[0].nodeName === "HTML" || el[0].nodeType === 3) {
+    if (el[0].nodeName === "HTML") {
       return fakeEl;
+    } else if (el[0].nodeType === 3) {
+      return closest(angular.element(el[0].parentNode), selector);
     } else if (matches.apply(el[0], [selector])) {
       return el;
     } else {
@@ -62,6 +71,7 @@
           height: '@',
           width: '@',
           body: '=',
+          purifyPaste: '=',
           placeholder: '@',
           editorClass: '@',
           buttons: '@',
@@ -99,7 +109,7 @@
           };
         }],
         link: function(scope, element, attrs, ngModel) {
-          var HEADER_CLASS, LINK_DEFAULT, editor, getLinkAtCursor, haveInteraction, initialContent, menubar, themeClass, updateModel;
+          var HEADER_CLASS, LINK_DEFAULT, editor, getLinkAtCursor, haveInteraction, initialContent, menubar, opts, themeClass, updateModel;
           LINK_DEFAULT = "http://";
           HEADER_CLASS = 'h4';
           themeClass = attrs.theme ? 'angular-squire-theme-' + attrs.theme : '';
@@ -202,6 +212,35 @@
               return updateModel(html);
             }
           });
+          if (DOMPurify && scope.purifyPaste) {
+            if (!DOMPurify.addedHrefTargetHook) {
+              DOMPurify.addedHrefTargetHook = true;
+              DOMPurify.addHook('afterSanitizeAttributes', function(node) {
+                if (indexOf.call(node, 'target') >= 0) {
+                  return node.setAttribute('target', '_blank');
+                }
+              });
+            }
+            if (typeof scope.purifyPaste === 'boolean') {
+              opts = {
+                RETURN_DOM_FRAGMENT: true,
+                FORBID_ATTR: ['style'],
+                FORBID_TAGS: ['style'],
+                ALLOW_DATA_ATTR: false,
+                SAFE_FOR_TEMPLATES: true,
+                SAFE_FOR_JQUERY: true
+              };
+            } else {
+              opts = scope.purifyPaste;
+              opts.RETURN_DOM_FRAGMENT = true;
+            }
+            editor.addEventListener('willPaste', function(event) {
+              var div;
+              div = document.createElement('div');
+              div.appendChild(event.fragment);
+              event.fragment = DOMPurify.sanitize(div.innerHTML, opts);
+            });
+          }
           editor.addEventListener("focus", function() {
             element.addClass('focus').triggerHandler('focus');
             scope.editorVisibility(true);
