@@ -72,7 +72,6 @@
           width: '@',
           body: '=',
           purifyPaste: '=',
-          strictPaste: '=',
           placeholder: '@',
           editorClass: '@',
           buttons: '@',
@@ -111,7 +110,6 @@
           };
         }],
         link: function(scope, element, attrs, ngModel) {
-          var HEADER_CLASS, LINK_DEFAULT, editor, getLinkAtCursor, haveInteraction, initialContent, menubar, opts, themeClass, updateModel;
           var HEADER_CLASS, LINK_DEFAULT, baseClasses, blurHandler, editor, focusHandler, getLinkAtCursor, haveInteraction, initialContent, menubar, opts, setActive, themeClass, updateModel;
           LINK_DEFAULT = "http://";
           HEADER_CLASS = 'h4';
@@ -252,11 +250,10 @@
               opts = {
                 RETURN_DOM_FRAGMENT: true,
                 FORBID_ATTR: ['style'],
-                FORBID_TAGS: ['style'],
+                FORBID_TAGS: ['style', 'script', 'blink', 'pre', 'code'],
                 ALLOW_DATA_ATTR: false,
                 SAFE_FOR_TEMPLATES: true,
                 SAFE_FOR_JQUERY: true
-                RETURN_DOM_FRAGMENT: true
               };
             } else {
               opts = scope.purifyPaste;
@@ -267,7 +264,6 @@
               div = document.createElement('div');
               div.appendChild(event.fragment);
               event.fragment = DOMPurify.sanitize(div.innerHTML, opts);
-              return DOMPurify.sanitize(div.innerHTML, opts);
             });
           }
           editor.addEventListener("focus", function() {

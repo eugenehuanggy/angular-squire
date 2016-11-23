@@ -51,6 +51,7 @@ basic usage of the directive looks like this:
 `placeholder` - placeholder text (optional)
 `buttons` - object containing button visibility options, see below (optional)
 `purifyPaste` - boolean or object. If true enable DOMPurify on paste, if object, use as options to DOMPurify (needs DOMPurify)
+`focusExpand` - boolean when true add listener for focus of this element and children that cause editor to expand open and close on blur while form is still clean
 
 ## Changing which buttons show on editor
 
@@ -133,6 +134,8 @@ $angular-squire-border-color: #dde6e8 !default;
 $angular-squire-popover-bg: #FAFAFA !default;
 $angular-squire-highlight-color: #55ACEE !default;
 $angular-squire-wrapper-padding: 5px 0 !default;
+$angular-squire-expanding-height-min: 70px !default;
+$angular-squire-expanding-height-max: 150px !default;
 ```
 
 # depends on
