@@ -1,12 +1,12 @@
 # angular-squire
-angularjs directive for the [squire rich text editor](https://github.com/neilj/Squire). 
+angularjs directive for the [squire rich text editor](https://github.com/neilj/Squire).
 
 # important
 
 2.0.0 is the latest but you should use the 1.x.x release because all these docs go with that. thanks!
 
 Features:
-- a more functional ui than squire's example 
+- a more functional ui than squire's example
 - minimal look and feel
 - my cat loves it
 - optional configurable html sanitization (requires sanatize.js - which is not included)
@@ -34,7 +34,7 @@ Don't forget to include squire-rte before this script!
 
 add an angular module dependency: `angular-squire`
 
-basic usage of the directive looks like this:  
+basic usage of the directive looks like this:
 ```html
 <squire editor-class="foo" height="150px"
     ng-model="myModel" body="initialValue"
@@ -42,18 +42,19 @@ basic usage of the directive looks like this:
 </squire>
 ```
 
-*Attributes:*  
-`editor-class` - class given to the editor container (optional)  
-`height` - css height for the editor (optional)  
+*Attributes:*
+`editor-class` - class given to the editor container (optional)
+`height` - css height for the editor (optional)
 `width` - css width for the editor (optional)
 `body` - binding that contains the initial html contents of the editor, if different from `ng-model` (optional)
-`ng-model` - where does the html go? **required**  
-`placeholder` - placeholder text (optional) 
-`buttons` - object containing button visibility options, see below (optional) 
+`ng-model` - where does the html go? **required**
+`placeholder` - placeholder text (optional)
+`buttons` - object containing button visibility options, see below (optional)
+`purifyPaste` - boolean or object. If true enable DOMPurify on paste, if object, use as options to DOMPurify (needs DOMPurify)
 
 ## Changing which buttons show on editor
 
-The `buttons` attribute on the directive can be an object where you can set any of the following keys to false.  
+The `buttons` attribute on the directive can be an object where you can set any of the following keys to false.
 All keys are optional
 
 ```js
@@ -98,19 +99,13 @@ squire-controls will place it's contents within the squire div. Its purpose is t
  </squire>
 ```
 ## squireServiceProvider
-`squireServiceProvider` is available to configure the directive. It has the following methods:  
+`squireServiceProvider` is available to configure the directive. It has the following methods:
 
-*Methods:*  
-`onPaste(cb)` cb = function(e, editor) - e contains `fragment` that will be pasted   
-`onChange(cb)` cb = function(e, editor) - e contains `html` that will be set into `ng-model`  
-`strictPaste(isEnabled)` (default: false) pass true to only allow `div, span, b, i` elements in pasted content  
-`sanitizeOptions.paste(obj)` object containing custom [sanitize.js options](https://github.com/gbirke/Sanitize.js#configuration-object-parameters) to sanitize pasted content  
-`sanitizeOptions.input(obj)` object containing custom [sanitize.js options](https://github.com/gbirke/Sanitize.js#configuration-object-parameters) to sanitize ALL content  
-`enableSanitizer(isEnabled)` (default: true) should we sanitize all html? only safe attributes and tags which the editor can create are allowed by default. Change behavior via methods above  
+*Methods:*
 `setButtonDefaults(obj)` object containing default button visibility for all editors. See 'Changing which buttons show on editor' section for key names
 
-# html sanitization 
-input is sanitized if you include [sanitize.js]( https://github.com/gbirke/Sanitize.js), which is a dependency in bower, so you will have it on hand. 
+# html sanitization
+input is sanitized if you include DOMPurify (either having it in your node_modules or be on window)
 
 
 # changing the template
@@ -144,7 +139,6 @@ $angular-squire-wrapper-padding: 5px 0 !default;
 
 ```js
 "angular": ">=1.3.8",
-"jquery": ">=1.9.0",
 "squire-rte": ">=1.3.0"
 ```
 
