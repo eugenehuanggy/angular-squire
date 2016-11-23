@@ -11,7 +11,7 @@ Features:
 - my cat loves it
 - optional configurable html sanitization (requires sanatize.js - which is not included)
 
-Check out the [DEMO](http://hourlynerd.github.io/angular-squire/)
+Check out the [DEMO](http://catalant.github.io/angular-squire/)
 
 # install
 
@@ -117,7 +117,7 @@ directive's javascript.
 For example html template see [current template](https://raw.githubusercontent.com/HourlyNerd/angular-squire/master/app/modules/angular-squire/editor.html)
 
 
-For advanced usage see [demo](http://hourlynerd.github.io/angular-squire/).
+For advanced usage see [demo](http://catalant.github.io/angular-squire/).
 
 # customizing scss styles
 

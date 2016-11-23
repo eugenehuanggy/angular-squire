@@ -23,12 +23,15 @@
   ],
   "dependencies": {
     "angular": "~1.3.8",
-    "squire-rte": "1.6.4"
+    "squire-rte": "1.6.4",
+    "angular-squire": "~2.3.0"
   },
   "devDependencies": {},
   "overrides": {
     "squire-rte": {
-      "main": ["build/squire-raw.js"]
+      "main": [
+        "build/squire-raw.js"
+      ]
     }
   }
 }
