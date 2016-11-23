@@ -2,9 +2,16 @@ canRequire = module? and module.exports
 
 if canRequire
     SQ = require('squire-rte')
+    try
+        DOMPurify = require('dompurify')
+    catch
+        DOMPurify = null
+
     module.exports = 'angular-squire'
 else
     SQ = window.Squire
+    DOMPurify = window.DOMPurify or null
+
 if typeof SQ != "function"
     throw new Error("angular-squire requires squire-rte script to be loaded before it." +
             "Get it from https://github.com/neilj/Squire")
@@ -19,6 +26,7 @@ if typeof SQ != "function"
                 height: '@'
                 width: '@'
                 body: '='
+                strictPaste: '='
                 placeholder: '@'
                 editorClass: '@'
                 buttons: '@'
@@ -162,6 +170,29 @@ if typeof SQ != "function"
                         updateModel(html)
                 )
 
+                if DOMPurify and scope.purifyPaste
+                    if not DOMPurify.addedHrefTargetHook
+                        DOMPurify.addedHrefTargetHook = true #dont add a zillion of these
+                        DOMPurify.addHook('afterSanitizeAttributes', (node) ->
+                            # set all elements owning target to target=_blank
+                            if 'target' in node
+                                node.setAttribute('target', '_blank')
+                        )
+                        
+                    if typeof scope.purifyPaste == 'boolean'
+                        opts = 
+                            RETURN_DOM_FRAGMENT: true
+                    else 
+                        # assume that the options are coming in from that scope binding
+                        opts = scope.purifyPaste
+                        opts.RETURN_DOM_FRAGMENT = true # needed by squire-rte api contract
+
+                    editor.addEventListener('willPaste', (event) ->
+                        div = document.createElement('div');
+                        div.appendChild(event.fragment);
+                        return DOMPurify.sanitize(div.innerHTML, opts);
+                    )
+
                 editor.addEventListener("focus", ->
                     element.addClass('focus').triggerHandler('focus')
                     scope.editorVisibility(true)
@@ -261,7 +292,7 @@ if typeof SQ != "function"
                             linky = LINK_DEFAULT
                         else
                             linky = scope.data.link
-                            
+
                         editor.makeLink(linky, {
                             target: '_blank',
                             title: linky,
