@@ -226,7 +226,7 @@ $angular-squire-body-font-size: 14px !default;
 
     .menu.b .item.bold, .menu.i .item.italic , .menu.ul .item.ulist, .menu.ol .item.olist, .menu.u .item.underline,
     .menu.blockquote .item.quote, .menu.align-left .item.aleft, .menu.align-right .item.aright,
-    .menu.align-center .item.acenter, .menu.size .item.header {
+    .menu.align-center .item.acenter, .menu.size .item.header, .menu.a .item.add-link {
         @extend .hl;
     }
 

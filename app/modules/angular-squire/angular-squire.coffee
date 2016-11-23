@@ -25,8 +25,10 @@ matches = window.Element.prototype.matches ||
 fakeEl = angular.element()
 
 closest = (el, selector) ->
-    if el[0].nodeName == "HTML" or el[0].nodeType == 3
+    if el[0].nodeName == "HTML"
         return fakeEl
+    else if el[0].nodeType == 3
+        return closest(angular.element(el[0].parentNode), selector)
     else if matches.apply(el[0], [selector])
         return el
     else
@@ -44,7 +46,7 @@ closest = (el, selector) ->
                 height: '@'
                 width: '@'
                 body: '='
-                strictPaste: '='
+                purifyPaste: '='
                 placeholder: '@'
                 editorClass: '@'
                 buttons: '@'
@@ -194,19 +196,26 @@ closest = (el, selector) ->
                             if 'target' in node
                                 node.setAttribute('target', '_blank')
                         )
-                        
+
                     if typeof scope.purifyPaste == 'boolean'
-                        opts = 
+                        opts =
                             RETURN_DOM_FRAGMENT: true
-                    else 
+                            FORBID_ATTR: ['style']
+                            FORBID_TAGS: ['style', 'script', 'blink', 'pre', 'code']
+                            ALLOW_DATA_ATTR: false
+                            SAFE_FOR_TEMPLATES: true
+                            SAFE_FOR_JQUERY: true
+
+                    else
                         # assume that the options are coming in from that scope binding
                         opts = scope.purifyPaste
-                        opts.RETURN_DOM_FRAGMENT = true # needed by squire-rte api contract
+                        opts.RETURN_DOM_FRAGMENT = true
 
                     editor.addEventListener('willPaste', (event) ->
                         div = document.createElement('div');
                         div.appendChild(event.fragment);
-                        return DOMPurify.sanitize(div.innerHTML, opts);
+                        event.fragment = DOMPurify.sanitize(div.innerHTML, opts);
+                        return
                     )
 
                 editor.addEventListener("focus", ->
