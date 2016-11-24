@@ -28,9 +28,7 @@
   "devDependencies": {},
   "overrides": {
     "squire-rte": {
-      "main": [
-        "build/squire-raw.js"
-      ]
+      "main": ["build/squire-raw.js"]
     }
   }
 }
