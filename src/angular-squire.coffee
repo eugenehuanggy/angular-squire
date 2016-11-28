@@ -38,7 +38,7 @@ closest = (el, selector) ->
 
 (if canRequire then require('angular') else window.angular)
     .module("angular-squire", [])
-    .directive("squire", ['squireService', (squireService) ->
+    .directive("squire", ['squireService', '$window', (squireService, $window) ->
         return {
             restrict: 'E'
             require: "ngModel"
@@ -53,9 +53,10 @@ closest = (el, selector) ->
                 theme: '=' # currently only supports 'dark' or not setting it
                 chromeOnHoverAndFocus: '=' # If true, only show squire toolbar and border on focus and hover
                 heightWrapContent: '=' # Overrides the height settings and makes editor wrap contents
+                focusExpand: '=?'
             replace: true
             transclude: true
-            templateUrl: "/modules/angular-squire/editor.html"
+            templateUrl: "angular-squire-main-template.html"
 
             ### @ngInject ###
             controller: ($scope) ->
@@ -84,6 +85,26 @@ closest = (el, selector) ->
 
                 themeClass = if attrs.theme then 'angular-squire-theme-'+attrs.theme else ''
 
+                setActive = () ->
+                    isChildElement = element[0].contains(document.activeElement) or element[0] == document.activeElement
+                    hasDirtyElements = element[0].getElementsByClassName('ng-dirty').length > 0
+                    if (isChildElement or hasDirtyElements)
+                        if (!element[0].classList.contains('input-focus'))
+                            element[0].classList.add("input-focus")
+                     else
+                        element[0].classList.remove("input-focus")
+
+                focusHandler = () ->
+                    $window.setTimeout(setActive(), 2)
+
+                blurHandler = () ->
+                    $window.setTimeout(setActive(), 1)
+
+                baseClasses = element[0].className
+                if scope.focusExpand
+                    element[0].classList.add("input-focus-expanding")
+                    element[0].addEventListener('blur', blurHandler, true)
+                    element[0].addEventListener('focus', focusHandler, true)
 
                 editor = scope.editor = null
                 scope.data =
@@ -205,7 +226,6 @@ closest = (el, selector) ->
                             ALLOW_DATA_ATTR: false
                             SAFE_FOR_TEMPLATES: true
                             SAFE_FOR_JQUERY: true
-
                     else
                         # assume that the options are coming in from that scope binding
                         opts = scope.purifyPaste

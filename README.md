@@ -11,7 +11,7 @@ Features:
 - my cat loves it
 - optional configurable html sanitization (requires sanatize.js - which is not included)
 
-Check out the [DEMO](http://hourlynerd.github.io/angular-squire/)
+Check out the [DEMO](http://catalant.github.io/angular-squire/)
 
 # install
 
@@ -51,6 +51,7 @@ basic usage of the directive looks like this:
 `placeholder` - placeholder text (optional)
 `buttons` - object containing button visibility options, see below (optional)
 `purifyPaste` - boolean or object. If true enable DOMPurify on paste, if object, use as options to DOMPurify (needs DOMPurify)
+`focusExpand` - boolean when true add listener for focus of this element and children that cause editor to expand open and close on blur while form is still clean
 
 ## Changing which buttons show on editor
 
@@ -117,7 +118,7 @@ directive's javascript.
 For example html template see [current template](https://raw.githubusercontent.com/HourlyNerd/angular-squire/master/app/modules/angular-squire/editor.html)
 
 
-For advanced usage see [demo](http://hourlynerd.github.io/angular-squire/).
+For advanced usage see [demo](http://catalant.github.io/angular-squire/).
 
 # customizing scss styles
 
@@ -133,6 +134,8 @@ $angular-squire-border-color: #dde6e8 !default;
 $angular-squire-popover-bg: #FAFAFA !default;
 $angular-squire-highlight-color: #55ACEE !default;
 $angular-squire-wrapper-padding: 5px 0 !default;
+$angular-squire-expanding-height-min: 70px !default;
+$angular-squire-expanding-height-max: 150px !default;
 ```
 
 # depends on
@@ -145,9 +148,8 @@ $angular-squire-wrapper-padding: 5px 0 !default;
 # building
 
 ```bash
-npm install bower -g
-npm install gulp -g
 npm install
-bower install
-gulp build
+npm run build
 ```
+
+sorry, it wont work on windows unless you have unix command line utils i use installed
