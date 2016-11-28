@@ -1,6 +1,6 @@
 /**
 * @preserve angular-squire - angularjs directive for squire rich text editor
-* @version v2.3.0
+* @version v2.4.0
 * @license MIT
 *
 * angular-squire includes squire-rte which is Copyright © by Neil Jenkins. MIT Licensed.
@@ -63,7 +63,7 @@
   };
 
   (canRequire ? require('angular') : window.angular).module("angular-squire", []).directive("squire", [
-    'squireService', function(squireService) {
+    'squireService', '$window', function(squireService, $window) {
       return {
         restrict: 'E',
         require: "ngModel",
@@ -77,7 +77,8 @@
           buttons: '@',
           theme: '=',
           chromeOnHoverAndFocus: '=',
-          heightWrapContent: '='
+          heightWrapContent: '=',
+          focusExpand: '=?'
         },
         replace: true,
         transclude: true,
@@ -109,10 +110,34 @@
           };
         }],
         link: function(scope, element, attrs, ngModel) {
-          var HEADER_CLASS, LINK_DEFAULT, editor, getLinkAtCursor, haveInteraction, initialContent, menubar, opts, themeClass, updateModel;
+          var HEADER_CLASS, LINK_DEFAULT, baseClasses, blurHandler, editor, focusHandler, getLinkAtCursor, haveInteraction, initialContent, menubar, opts, setActive, themeClass, updateModel;
           LINK_DEFAULT = "http://";
           HEADER_CLASS = 'h4';
           themeClass = attrs.theme ? 'angular-squire-theme-' + attrs.theme : '';
+          setActive = function() {
+            var hasDirtyElements, isChildElement;
+            isChildElement = element[0].contains(document.activeElement) || element[0] === document.activeElement;
+            hasDirtyElements = element[0].getElementsByClassName('ng-dirty').length > 0;
+            if (isChildElement || hasDirtyElements) {
+              if (!element[0].classList.contains('input-focus')) {
+                return element[0].classList.add("input-focus");
+              }
+            } else {
+              return element[0].classList.remove("input-focus");
+            }
+          };
+          focusHandler = function() {
+            return $window.setTimeout(setActive(), 2);
+          };
+          blurHandler = function() {
+            return $window.setTimeout(setActive(), 1);
+          };
+          baseClasses = element[0].className;
+          if (scope.focusExpand) {
+            element[0].classList.add("input-focus-expanding");
+            element[0].addEventListener('blur', blurHandler, true);
+            element[0].addEventListener('focus', focusHandler, true);
+          }
           editor = scope.editor = null;
           scope.data = {
             link: LINK_DEFAULT
@@ -225,7 +250,7 @@
               opts = {
                 RETURN_DOM_FRAGMENT: true,
                 FORBID_ATTR: ['style'],
-                FORBID_TAGS: ['style'],
+                FORBID_TAGS: ['style', 'script', 'blink', 'pre', 'code'],
                 ALLOW_DATA_ATTR: false,
                 SAFE_FOR_TEMPLATES: true,
                 SAFE_FOR_JQUERY: true
