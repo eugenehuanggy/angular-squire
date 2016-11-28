@@ -230,6 +230,9 @@ $angular-squire-body-font-size: 14px !default;
         @extend .hl;
     }
 
+    .angular-squire-container {
+        position: relative;
+    }
 
     .angular-squire-wrapper {
         position: relative;
