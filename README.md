@@ -148,9 +148,8 @@ $angular-squire-expanding-height-max: 150px !default;
 # building
 
 ```bash
-npm install bower -g
-npm install gulp -g
 npm install
-bower install
-gulp build
+npm run build
 ```
+
+sorry, it wont work on windows unless you have unix command line utils i use installed

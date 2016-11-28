@@ -1,7 +1,4 @@
-ngular = if module? and module.exports then require('angular') else window.angular
-
-
-ngular.module("angular-squire").run(["$templateCache", ($templateCache) ->
+(if module? and module.exports then require('angular') else window.angular).module("angular-squire").run(["$templateCache", ($templateCache) ->
     $templateCache.put('angular-squire-icon-attachment', """
         <svg version="1.1"  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
         viewBox="0 0 125 125" style="enable-background:new 0 0 125 125;" xml:space="preserve">

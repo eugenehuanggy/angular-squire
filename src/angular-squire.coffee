@@ -56,7 +56,7 @@ closest = (el, selector) ->
                 focusExpand: '=?'
             replace: true
             transclude: true
-            templateUrl: "/modules/angular-squire/editor.html"
+            templateUrl: "angular-squire-main-template.html"
 
             ### @ngInject ###
             controller: ($scope) ->
