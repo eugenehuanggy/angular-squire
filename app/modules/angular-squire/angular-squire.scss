@@ -243,6 +243,9 @@ $angular-squire-expanding-height-max: 150px !default;
         @extend .hl;
     }
 
+    .angular-squire-container {
+        position: relative;
+    }
 
     .angular-squire-wrapper {
         position: relative;
