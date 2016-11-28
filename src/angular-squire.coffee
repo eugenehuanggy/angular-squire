@@ -56,10 +56,9 @@ closest = (el, selector) ->
                 focusExpand: '=?'
             replace: true
             transclude: true
-            templateUrl: "/modules/angular-squire/editor.html"
+            templateUrl: "angular-squire-main-template.html"
 
-            ### @ngInject ###
-            controller: ($scope) ->
+            controller: ['$scope' ,($scope) ->
                 buttons = {}
                 if $scope.buttons
                     buttons = $scope.$eval($scope.buttons) or {}
@@ -77,6 +76,7 @@ closest = (el, selector) ->
                     return editorVisible
 
                 return
+            ]
 
             link: (scope, element, attrs, ngModel) ->
                 LINK_DEFAULT = "http://"
