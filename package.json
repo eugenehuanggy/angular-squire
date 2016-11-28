@@ -3,8 +3,7 @@
   "version": "2.5.0",
   "description": "angularjs directive for squire rich text editor",
   "main": "dist/angular-squire.js",
-  "dependencies": {
-  },
+  "dependencies": {},
   "scripts": {
     "build": "rm -rf dist && mkdir dist && ./node_modules/node-sass/bin/node-sass src/angular-squire.scss dist/angular-squire.css && echo '(if module? and module.exports then require(\"angular\") else window.angular).module(\"angular-squire\").run([\"$templateCache\", ($templateCache) -> $templateCache.put(\"angular-squire-main-template.html\", \"\"\"'\"$(node_modules/html-minifier/cli.js --collapse-whitespace src/template.html)\"'\"\"\")]);' | node_modules/coffee-script/bin/coffee -sc > dist/angular-squire-template.js && node_modules/coffee-script/bin/coffee  --compile --output dist src && cp src/angular-squire.scss dist/ && cat dist/angular-squire-icons.js >> dist/angular-squire.js && rm dist/angular-squire-icons.js && cat dist/angular-squire-template.js >> dist/angular-squire.js && rm dist/angular-squire-template.js && node_modules/uglifyjs/bin/uglifyjs --compress --mangle --screw-ie8 -- dist/angular-squire.js > dist/angular-squire.min.js"
   },
@@ -15,8 +14,9 @@
   "author": "Catalant Technologies, Inc",
   "license": "MIT",
   "devDependencies": {
-    "html-minifier": "3.2.3",
     "coffee-script": "1.11.1",
-    "node-sass": "3.13.0"
+    "html-minifier": "3.2.3",
+    "node-sass": "3.13.0",
+    "uglifyjs": "2.4.10"
   }
 }
