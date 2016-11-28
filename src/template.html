@@ -111,8 +111,10 @@
         </div>
 
         <div class='angular-squire-container'>
-            <div class='placeholder'>
-                <div ng-if='showPlaceholder()' ng-bind="placeholder"></div>
+            <div
+                class='placeholder'
+                ng-show='showPlaceholder()'
+                ng-bind-html='placeholder'>
             </div>
             <div class='angular-squire-wrapper' ng-style='{width: width, height: height}'></div>
         </div>
