@@ -38,7 +38,7 @@ closest = (el, selector) ->
 
 (if canRequire then require('angular') else window.angular)
     .module("angular-squire", [])
-    .directive("squire", ['squireService', '$window', (squireService, $window) ->
+    .directive("squire", ['squireService', (squireService) ->
         return {
             restrict: 'E'
             require: "ngModel"
@@ -94,7 +94,7 @@ closest = (el, selector) ->
                      else
                         element[0].classList.remove("input-focus")
 
-   
+
                 if scope.focusExpand
                     element[0].classList.add("input-focus-expanding")
                     element[0].addEventListener('blur', setActive, true)
