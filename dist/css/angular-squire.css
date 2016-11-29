@@ -32,6 +32,8 @@
     background-color: #d2d2d2; }
     .angular-squire .hl svg path, .angular-squire .menu .item:hover svg path, .angular-squire .menu.b .item.bold svg path, .angular-squire .menu.i .item.italic svg path, .angular-squire .menu.ul .item.ulist svg path, .angular-squire .menu.ol .item.olist svg path, .angular-squire .menu.u .item.underline svg path, .angular-squire .menu.blockquote .item.quote svg path, .angular-squire .menu.align-left .item.aleft svg path, .angular-squire .menu.align-right .item.aright svg path, .angular-squire .menu.align-center .item.acenter svg path, .angular-squire .menu.size .item.header svg path, .angular-squire .menu.a .item.add-link svg path {
       fill: #4c4c4c; }
+  .angular-squire.input-focus-expanding .angular-squire-container .placeholder {
+    height: 3rem; }
   .angular-squire.input-focus-expanding .editor-container {
     height: 70px;
     transition: height 0.25s ease-in; }

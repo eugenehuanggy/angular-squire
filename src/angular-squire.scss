@@ -62,6 +62,10 @@ $angular-squire-expanding-height-max: 150px !default;
         }
     }
 
+    &.input-focus-expanding .angular-squire-container .placeholder {
+        height: 3rem;
+    }
+
     &.input-focus-expanding .editor-container {
         height: $angular-squire-expanding-height-min;
         transition: height 0.25s ease-in;
