@@ -93,7 +93,7 @@
           setActive = function() {
             var hasDirtyElements, isChildElement;
             isChildElement = element[0].contains(document.activeElement) || element[0] === document.activeElement;
-            hasDirtyElements = element[0].getElementsByClassName('ng-dirty').length > 0;
+            hasDirtyElements = element[0].getElementsByClassName('ng-dirty').length > 0 || element[0].classList.contains('ng-dirty');
             if (isChildElement || hasDirtyElements) {
               if (!element[0].classList.contains('input-focus')) {
                 return element[0].classList.add("input-focus");
