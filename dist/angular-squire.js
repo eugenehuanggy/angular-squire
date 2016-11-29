@@ -39,7 +39,7 @@
   };
 
   (canRequire ? require('angular') : window.angular).module("angular-squire", []).directive("squire", [
-    'squireService', '$window', function(squireService, $window) {
+    'squireService', function(squireService) {
       return {
         restrict: 'E',
         require: "ngModel",
@@ -86,7 +86,7 @@
           }
         ],
         link: function(scope, element, attrs, ngModel) {
-          var HEADER_CLASS, LINK_DEFAULT, baseClasses, blurHandler, editor, focusHandler, getLinkAtCursor, haveInteraction, initialContent, menubar, opts, setActive, themeClass, updateModel;
+          var HEADER_CLASS, LINK_DEFAULT, editor, getLinkAtCursor, haveInteraction, initialContent, menubar, opts, setActive, themeClass, updateModel;
           LINK_DEFAULT = "http://";
           HEADER_CLASS = 'h4';
           themeClass = attrs.theme ? 'angular-squire-theme-' + attrs.theme : '';
@@ -102,17 +102,10 @@
               return element[0].classList.remove("input-focus");
             }
           };
-          focusHandler = function() {
-            return $window.setTimeout(setActive(), 2);
-          };
-          blurHandler = function() {
-            return $window.setTimeout(setActive(), 1);
-          };
-          baseClasses = element[0].className;
           if (scope.focusExpand) {
             element[0].classList.add("input-focus-expanding");
-            element[0].addEventListener('blur', blurHandler, true);
-            element[0].addEventListener('focus', focusHandler, true);
+            element[0].addEventListener('blur', setActive, true);
+            element[0].addEventListener('focus', setActive, true);
           }
           editor = scope.editor = null;
           scope.data = {
