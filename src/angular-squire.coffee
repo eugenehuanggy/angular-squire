@@ -122,6 +122,9 @@ closest = (el, selector) ->
                     else
                         return not value
 
+                hasVisibleElements = () ->
+                    return ngModel.$viewValue?.match(/<(ul|ol)>|(&nbsp;)/g)
+
                 getLinkAtCursor = ->
                     return LINK_DEFAULT if not editor
                     return closest(angular.element(editor.getSelection()
@@ -139,8 +142,9 @@ closest = (el, selector) ->
                     editor?.destroy()
                 )
                 scope.showPlaceholder = ->
-                    # it also gets hidden via css on focus
-                    return ngModel.$isEmpty(ngModel.$viewValue)
+                    # show placeholder if model is empty (i.e. no valid string value)
+                    # and no visible elements are rendering - e.g. list bullets or spaces were added in
+                    return ngModel.$isEmpty(ngModel.$viewValue) && !hasVisibleElements();
 
                 scope.popoverHide = (e, name) ->
                     hide = ->
