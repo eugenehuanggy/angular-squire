@@ -86,7 +86,7 @@
           }
         ],
         link: function(scope, element, attrs, ngModel) {
-          var HEADER_CLASS, LINK_DEFAULT, editor, getLinkAtCursor, haveInteraction, initialContent, menubar, opts, setActive, themeClass, updateModel;
+          var HEADER_CLASS, LINK_DEFAULT, editor, getLinkAtCursor, hasVisibleElements, haveInteraction, initialContent, menubar, opts, setActive, themeClass, updateModel;
           LINK_DEFAULT = "http://";
           HEADER_CLASS = 'h4';
           themeClass = attrs.theme ? 'angular-squire-theme-' + attrs.theme : '';
@@ -131,6 +131,10 @@
               return !value;
             }
           };
+          hasVisibleElements = function() {
+            var ref;
+            return (ref = ngModel.$viewValue) != null ? ref.match(/<(ul|ol)>|(&nbsp;)/g) : void 0;
+          };
           getLinkAtCursor = function() {
             if (!editor) {
               return LINK_DEFAULT;
@@ -149,7 +153,7 @@
             return editor != null ? editor.destroy() : void 0;
           });
           scope.showPlaceholder = function() {
-            return ngModel.$isEmpty(ngModel.$viewValue);
+            return ngModel.$isEmpty(ngModel.$viewValue) && !hasVisibleElements();
           };
           scope.popoverHide = function(e, name) {
             var hide;
