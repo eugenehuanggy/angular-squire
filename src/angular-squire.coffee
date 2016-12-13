@@ -109,6 +109,8 @@ closest = (el, selector) ->
                         ngModel.$setViewValue(value)
                         if ngModel.$isEmpty(value)
                             element.removeClass('squire-has-value')
+                            if scope.focusExpand
+                                element[0].classList.remove("ng-dirty")
                         else
                             element.addClass('squire-has-value')
                     )

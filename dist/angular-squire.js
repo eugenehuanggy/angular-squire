@@ -115,7 +115,10 @@
             return scope.$evalAsync(function() {
               ngModel.$setViewValue(value);
               if (ngModel.$isEmpty(value)) {
-                return element.removeClass('squire-has-value');
+                element.removeClass('squire-has-value');
+                if (scope.focusExpand) {
+                  return element[0].classList.remove("ng-dirty");
+                }
               } else {
                 return element.addClass('squire-has-value');
               }
