@@ -55,6 +55,7 @@ closest = (el, selector) ->
                 heightWrapContent: '=' # Overrides the height settings and makes editor wrap contents
                 focusExpand: '=?'
                 editing: '=?'
+                config: '=?'
             replace: true
             transclude: true
             templateUrl: "angular-squire-main-template.html"
@@ -188,9 +189,10 @@ closest = (el, selector) ->
 
                 ngModel.$setPristine()
 
-                editor = scope.editor = new SQ(element[0].querySelector('.angular-squire-wrapper'), {
+                config = scope.config || {
                     blockTag: 'P'
-                })
+                }
+                editor = scope.editor = new SQ(element[0].querySelector('.angular-squire-wrapper'), config)
 
                 initialContent = scope.body || ngModel.$viewValue
 
