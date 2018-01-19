@@ -54,6 +54,7 @@ closest = (el, selector) ->
                 chromeOnHoverAndFocus: '=' # If true, only show squire toolbar and border on focus and hover
                 heightWrapContent: '=' # Overrides the height settings and makes editor wrap contents
                 focusExpand: '=?'
+                editing: '=?'
             replace: true
             transclude: true
             templateUrl: "angular-squire-main-template.html"
@@ -64,16 +65,16 @@ closest = (el, selector) ->
                     buttons = $scope.$eval($scope.buttons) or {}
                 $scope.buttonVis = Object.assign({}, squireService.getButtonDefaults(), buttons)
 
-                editorVisible = true
+                $scope.editing = true
                 $scope.isEditorVisible = ->
-                    return editorVisible
+                    return $scope.editing
 
                 $scope.editorVisibility = @editorVisibility = (vis) ->
                     if arguments.length == 1
-                        if editorVisible != vis
+                        if $scope.editing != vis
                             $scope.editor?.focus()
-                        editorVisible = vis
-                    return editorVisible
+                        $scope.editing = vis
+                    return $scope.editing
 
                 return
             ]
