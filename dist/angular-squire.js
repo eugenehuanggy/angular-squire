@@ -54,39 +54,41 @@
           theme: '=',
           chromeOnHoverAndFocus: '=',
           heightWrapContent: '=',
-          focusExpand: '=?'
+          focusExpand: '=?',
+          editing: '=?',
+          config: '=?'
         },
         replace: true,
         transclude: true,
         templateUrl: "angular-squire-main-template.html",
         controller: [
           '$scope', function($scope) {
-            var buttons, editorVisible;
+            var buttons;
             buttons = {};
             if ($scope.buttons) {
               buttons = $scope.$eval($scope.buttons) || {};
             }
             $scope.buttonVis = Object.assign({}, squireService.getButtonDefaults(), buttons);
-            editorVisible = true;
+            $scope.editing = true;
             $scope.isEditorVisible = function() {
-              return editorVisible;
+              return $scope.editing;
             };
             $scope.editorVisibility = this.editorVisibility = function(vis) {
               var ref;
               if (arguments.length === 1) {
-                if (editorVisible !== vis) {
+                if ($scope.editing !== vis) {
                   if ((ref = $scope.editor) != null) {
                     ref.focus();
                   }
                 }
-                editorVisible = vis;
+                $scope.editing = vis;
               }
-              return editorVisible;
+              return $scope.editing;
             };
           }
         ],
         link: function(scope, element, attrs, ngModel) {
-          var HEADER_CLASS, LINK_DEFAULT, editor, getLinkAtCursor, hasVisibleElements, haveInteraction, initialContent, menubar, opts, setActive, themeClass, updateModel;
+          var HEADER_CLASS, LINK_DEFAULT, config, editor, getLinkAtCursor, hasVisibleElements, haveInteraction, initialContent, menubar, opts, setActive, themeClass, updateModel;
           LINK_DEFAULT = "http://";
           HEADER_CLASS = 'h4';
           themeClass = attrs.theme ? 'angular-squire-theme-' + attrs.theme : '';
@@ -196,9 +198,10 @@
           menubar = angular.element(element[0].querySelector('.menu'));
           haveInteraction = false;
           ngModel.$setPristine();
-          editor = scope.editor = new SQ(element[0].querySelector('.angular-squire-wrapper'), {
+          config = scope.config || {
             blockTag: 'P'
-          });
+          };
+          editor = scope.editor = new SQ(element[0].querySelector('.angular-squire-wrapper'), config);
           initialContent = scope.body || ngModel.$viewValue;
           if (initialContent) {
             editor.setHTML(initialContent);
